@@ -1,0 +1,86 @@
+baseURL = "https://liguangchang.cn"
+languageCode = "en-us"
+theme = "hello-friend-ng"
+paginate = 50
+
+PygmentsCodeFences = true
+PygmentsStyle = "monokai"
+hasCJKLanguage = true
+
+
+enableEmoji = true
+disable404 = false
+
+[blackfriday]
+  hrefTargetBlank = true
+
+[params]
+	showReadingTime = true
+
+	dateform = "01-02"
+	dateformShort = "01-02"
+	dateformNum = "2006-01-02"
+	dateformNumTime = "2006-01-02 15:04"
+
+	homeSubtitle = "Java、Go、Server-Side"
+	
+	disableReadOtherPosts = false
+	enableShareButtons = true	
+	enableThemeToggle = true
+
+
+	[[params.social]]
+		name = "github"
+		url  = "https://github.com/lgc523"
+
+	[[params.social]]
+		name = "email"
+		url  = "mailto:lgc523@126.com"
+
+[params.footer]
+	topText = ["Powered by Hugo · hello-friend-ng"]
+	bottomText = [' &#183; <a href="https://beian.miit.gov.cn">京ICP备2020035531号-2</a> &#183; <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41012202000328" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;">']
+ 
+[author]
+	name = "lgc523"
+
+[taxonomies]
+	category = "blog"
+	tag = "tags"
+	series = "series"
+	
+[languages]
+	[languages.en]
+		title = "互联网没一个好东西"
+		readOtherPosts = "Read other posts"
+		newerPosts = "Newer"
+		olderPosts = "Older"
+		readMore = "Read more"
+		menuMore = "Show more"
+		dateFormatSingle = "2006-01-02"
+		dataFormatList = "2006-01-02"
+
+		[languages.en.params.logo]
+			logoText = "$ 无需执妄为真 则自在无碍"
+			logoHomeLink = "/"
+			logoCursorColor = "#1b1c1d"
+			logoCursorANimate = "5s"
+
+	[[menu.main]]
+		identiier = "|"
+		name = "|"
+		url = "/"
+		weight = 10
+	
+	[[menu.main]]
+		identifier = "posts"
+		name = "post"
+		url = "/posts"
+		weight = 11
+
+	[[menu.main]]
+		identifier = "about"
+		name = "about"
+		url = "/about"
+		weight = 12
+		
