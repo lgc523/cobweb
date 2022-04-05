@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>tcp on 互联网没一个好东西</title>
+    <link>https://liguangchang.cn/tags/tcp/</link>
+    <description>Recent content in tcp on 互联网没一个好东西</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 21 Oct 2021 22:32:49 +0800</lastBuildDate><atom:link href="https://liguangchang.cn/tags/tcp/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>TCP超时和重传</title>
+      <link>https://liguangchang.cn/posts/tcp/tcp-timeout-repeat/</link>
+      <pubDate>Thu, 21 Oct 2021 22:32:49 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/tcp/tcp-timeout-repeat/</guid>
+      <description>TCP 的可靠性，在下层网络(IP) 出现丢失、重复、乱序的时候，会重传认为已经丢失的包。 当数据短或确认消息丢失，TCP启动重传操作，重传尚未确认的</description>
+    </item>
+    
+    <item>
+      <title>TCP Command</title>
+      <link>https://liguangchang.cn/posts/tcp/tcp-command/</link>
+      <pubDate>Thu, 23 Sep 2021 01:25:43 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/tcp/tcp-command/</guid>
+      <description>ip curl https://api.myip.com | json nc 我喜欢用这个 nc -vz -w 1 ip port -w 1 # TTL 1s ss ss ss -ltp | grep sshd # 查看进程的端口占用 ss -p | grep 22 # 查看端口被哪个进程占用 ss -tenp | grep 22 # 列出某个端口上</description>
+    </item>
+    
+    <item>
+      <title>TCP状态转换</title>
+      <link>https://liguangchang.cn/posts/tcp/tcp-status/</link>
+      <pubDate>Wed, 22 Sep 2021 23:12:55 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/tcp/tcp-status/</guid>
+      <description>TIME_WAIT TIME_WAIT 状态也称为2MSL等待状态，该状态中，TCP会等待两倍于最大段生存期(Maximum Segment Lifetime，MSL)的时间，有时也被称作加倍</description>
+    </item>
+    
+    <item>
+      <title>TCP选项</title>
+      <link>https://liguangchang.cn/posts/tcp/tcp-options/</link>
+      <pubDate>Fri, 17 Sep 2021 02:30:10 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/tcp/tcp-options/</guid>
+      <description>TCP头部包含了多个选项，选项列表结束(End of Option List ,EOL)、无操作(No operation，NOP) 以及最大段大小 (Maximum Segment Size，MSS)</description>
+    </item>
+    
+    <item>
+      <title>TCP应用</title>
+      <link>https://liguangchang.cn/posts/tcp/tcp-apply/</link>
+      <pubDate>Sat, 04 Sep 2021 09:56:34 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/tcp/tcp-apply/</guid>
+      <description>扫描主机 扫描端口 防御扫描 探测防火墙 跟踪路由 探测网络性能 干扰连接，重置回话，检查盲注攻击漏洞</description>
+    </item>
+    
+    <item>
+      <title>TCP数据传输-分片、滑动窗口、重发、流控制</title>
+      <link>https://liguangchang.cn/posts/tcp/tcp-transmission/</link>
+      <pubDate>Wed, 01 Sep 2021 01:28:08 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/tcp/tcp-transmission/</guid>
+      <description>通信问题 自身不包含可靠传递数据机制的协议，他们可能会使用用一种像数据校验和或者CRC这样的数学函数来检测收到的有差错的数据，但是他们不会去纠</description>
+    </item>
+    
+    <item>
+      <title>TCP报文格式、连接管理</title>
+      <link>https://liguangchang.cn/posts/tcp/tcp-connect-management/</link>
+      <pubDate>Tue, 31 Aug 2021 22:56:43 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/tcp/tcp-connect-management/</guid>
+      <description>传输层(Transport Layer)是 OSI 协议的第四层协议，是唯一负责总体的数据传输和数据控制传输层的一层协议 传输层作用 网际层提供了主机之间</description>
+    </item>
+    
+  </channel>
+</rss>

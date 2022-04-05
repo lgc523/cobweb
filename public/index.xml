@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>互联网没一个好东西</title>
+    <link>https://liguangchang.cn/</link>
+    <description>Recent content on 互联网没一个好东西</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 05 Apr 2022 19:47:21 +0800</lastBuildDate><atom:link href="https://liguangchang.cn/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About</title>
+      <link>https://liguangchang.cn/about/</link>
+      <pubDate>Tue, 05 Apr 2022 19:47:21 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/about/</guid>
+      <description>Hello，this is lgc523`s blog site。
+Test link pdf，lsmtree.pdf</description>
+    </item>
+    
+    <item>
+      <title>Go Tools</title>
+      <link>https://liguangchang.cn/posts/go/go-tools/</link>
+      <pubDate>Mon, 14 Feb 2022 08:27:01 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/go/go-tools/</guid>
+      <description>go tool nm go tool compile -l -p main main.go -&amp;gt; OBJ go tool nm main.o 方法列表 package main import &amp;#34;fmt&amp;#34; type People struct { } func (p *People) ShowA() { fmt.Println(&amp;#34;showA&amp;#34;) p.ShowB() } func (p *People) ShowB() { fmt.Println(&amp;#34;ShowB&amp;#34;) } type Teacher struct { People } func (t *Teacher) ShowB() { fmt.Println(&amp;#34;teacher showB&amp;#34;) } func main() { t := Teacher{} t.ShowA() } package main type A</description>
+    </item>
+    
+    <item>
+      <title>Go Map</title>
+      <link>https://liguangchang.cn/posts/go/go-map/</link>
+      <pubDate>Sat, 12 Feb 2022 17:59:16 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/go/go-map/</guid>
+      <description>init </description>
+    </item>
+    
+    <item>
+      <title>Metrics、Tracing、 Logging</title>
+      <link>https://liguangchang.cn/posts/distributed/distributed-cornerstone-observability/</link>
+      <pubDate>Thu, 10 Feb 2022 00:04:10 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/distributed/distributed-cornerstone-observability/</guid>
+      <description>分布式的基石 &amp;mdash; 可观测性 可观测性(Observability) 和可控制性(Controllability) 是由匈牙利数学家 Rudolf E·Kålmån 针</description>
+    </item>
+    
+    <item>
+      <title>Go Slice</title>
+      <link>https://liguangchang.cn/posts/go/go-slice/</link>
+      <pubDate>Wed, 09 Feb 2022 13:22:09 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/go/go-slice/</guid>
+      <description>init var s []int **nil 不需要内存分配 ** s := []int{} 空 slice s := []int{5} s := make([]int , 2 , 3) from slice/arr [) s := *new([]int ) type slice struct { array unsafe.Pointer len int cap int } https://asciiflow.com/#/share/eJy9kUEOgjAQRa8ymTULqSJIwkmoi4Z0YYLEIAsI4RbGhcdwzWm8gFfwCwqoaEATm%2F%2BSGTL9%2FS05R2qt2eVtuAo0GxyqTMfoc8mpZHfhCENyhko4FqpEpwkaydRZKo5VRufy4JFvTparKJEygrozlT%2B5Xj3sW669JAr181jvOu3KWhhu6g%2FqN9mXV2qLe57Ku%2Beg7zQ6HpoJMIEAUzADFpgDGzhg0Xjf3%2FpN1D%2Ff4eWpT%2Ftjp7xFxk8mj0Q7%2Frqt%2FfBzggGXo0BtkMh6SDRK2AKPgUElF1xcAC4tva4%3D) 扩容 扩容只关心容量，会把原 slice 的数据拷贝到新 silce 中</description>
+    </item>
+    
+    <item>
+      <title>Go Chan</title>
+      <link>https://liguangchang.cn/posts/go/go-chan/</link>
+      <pubDate>Wed, 09 Feb 2022 13:22:06 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/go/go-chan/</guid>
+      <description>FIFO ，数据总是按照写入的顺序流出管道。 声明和初始化 var ch chan int ch := make(chan int) ch := make(chan int, 1) 管道操作 操作符 &amp;lt;- , -&amp;gt; 表示数据流向，默认双向可读写，在函数间传递时可</description>
+    </item>
+    
+    <item>
+      <title>Sentinel Guard</title>
+      <link>https://liguangchang.cn/posts/java/sentinel-guard/</link>
+      <pubDate>Wed, 09 Feb 2022 11:32:01 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/java/sentinel-guard/</guid>
+      <description>Install dashboard  git@github.com:lgc523/Sentinel.git
+ &amp;lt;repositories&amp;gt;  &amp;lt;repository&amp;gt;  &amp;lt;id&amp;gt;alimaven&amp;lt;/id&amp;gt;  &amp;lt;name&amp;gt;aliyun maven&amp;lt;/name&amp;gt;  &amp;lt;url&amp;gt;https://maven.aliyun.com/nexus/content/repositories/central/&amp;lt;/url&amp;gt;  &amp;lt;releases&amp;gt;  &amp;lt;enabled&amp;gt;true&amp;lt;/enabled&amp;gt;  &amp;lt;/releases&amp;gt;  &amp;lt;snapshots&amp;gt;  &amp;lt;enabled&amp;gt;false&amp;lt;/enabled&amp;gt;  &amp;lt;/snapshots&amp;gt;  &amp;lt;/repository&amp;gt; &amp;lt;/repositories&amp;gt; mci -&amp;gt; jar cat guard-up.sh #!/bin/bash echo &amp;#39;start sentinel-dashboard ...&amp;#39; nohup java -Dserver.port=8080 -Dcsp.sentinel.dashboard.server=localhost:8080 -Dproject.name=sentinel-guard -jar sentinel-dashboard.jar &amp;gt; sentinel-dashboard.log 2&amp;gt;&amp;amp;1 &amp;amp; echo $! &amp;gt; /opt/sentinel-dashboard/sentinel-dashboard.pid  $ cat guard-k.sh #!/bin/sh PID=$(cat /opt/sentinel-dashboard/sentinel-dashboard.pid) kill -9 $PID echo &amp;#39;wait sentinel-dashboard...&amp;#39; </description>
+    </item>
+    
+    <item>
+      <title>Go Design Philosophy</title>
+      <link>https://liguangchang.cn/posts/go/go-design-philosophy/</link>
+      <pubDate>Tue, 08 Feb 2022 23:48:26 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/go/go-design-philosophy/</guid>
+      <description>Go history、philosophy。</description>
+    </item>
+    
+    <item>
+      <title>Elasticsearch: 基本概念</title>
+      <link>https://liguangchang.cn/posts/es/es-basic/</link>
+      <pubDate>Sun, 30 Jan 2022 20:43:01 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/es/es-basic/</guid>
+      <description>version 7.15.x 节点 GET /{indexName}/_search_shards &amp;#34;roles&amp;#34; : [ &amp;#34;data&amp;#34;, &amp;#34;data_cold&amp;#34;, &amp;#34;data_content&amp;#34;, &amp;#34;data_frozen&amp;#34;, &amp;#34;data_hot&amp;#34;, &amp;#34;data_warm&amp;#34;, &amp;#34;ingest&amp;#34;, &amp;#34;master&amp;#34;, &amp;#34;ml&amp;#34;, &amp;#34;remote_cluster_client&amp;#34;, &amp;#34;transform&amp;#34; ] 每个节点启动，默认是 master eligible 节点，可以设置 node.master:false 禁止 master-eligible 节点可以参加选主流程，成为 master 节点 第一个节点启动时候，</description>
+    </item>
+    
+    <item>
+      <title>Tomcat Architechure</title>
+      <link>https://liguangchang.cn/posts/java/tomcat-architecture/</link>
+      <pubDate>Mon, 24 Jan 2022 23:00:06 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/java/tomcat-architecture/</guid>
+      <description>基于 Java 语言的轻量级应用服务器，完全开源免费的 Servlet 容器实现，最初由 sun 公司开发（JavaWebServer），作为 Servlet 容器的参考实现，1999 年与 JServe</description>
+    </item>
+    
+    <item>
+      <title>Refresh File</title>
+      <link>https://liguangchang.cn/posts/java/refresh/</link>
+      <pubDate>Tue, 18 Jan 2022 22:06:34 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/java/refresh/</guid>
+      <description>早就想写一下动态刷新方面的东西，主要是项目中的配置文件更新，最近也准备看一下 spring-cloud 方面的东西，大概是 slf4j，nacos，nio，air（go</description>
+    </item>
+    
+    <item>
+      <title>Redis Skiplist</title>
+      <link>https://liguangchang.cn/posts/redis/redis-skiplist/</link>
+      <pubDate>Wed, 12 Jan 2022 00:39:52 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/redis/redis-skiplist/</guid>
+      <description>skiplist 是有序集合键的底层实现之一，有序集合包含的元素数量多或者元素是较长的字符串，redis 就会使用跳表来作为键的底层实现。 Skiplist 在每个节点中维持了</description>
+    </item>
+    
+    <item>
+      <title>Redis Ziplist</title>
+      <link>https://liguangchang.cn/posts/redis/redis-ziplist/</link>
+      <pubDate>Tue, 11 Jan 2022 01:03:09 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/redis/redis-ziplist/</guid>
+      <description>Ziplist 底层实现更紧凑，节省内存，没有指针的使用，基于 ziplist 实现了 LIst、Hash、Sorted Set 。 Ziplist 结构 zlbytes 列表长度 4B ，记录整个列表占用的内存字节数</description>
+    </item>
+    
+    <item>
+      <title>Redis Sds</title>
+      <link>https://liguangchang.cn/posts/redis/redis-sds/</link>
+      <pubDate>Tue, 11 Jan 2022 00:09:02 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/redis/redis-sds/</guid>
+      <description>simple dynamic string SDS 用来表示数据库中的字符串值，还被用做缓冲区（AOF缓冲区、客户端状态中的输入缓冲区）。 SDS 结构 len（4B）buf 已用长度 alloc (4B) buf 实际分</description>
+    </item>
+    
+    <item>
+      <title>Redis Sentinel Cluster</title>
+      <link>https://liguangchang.cn/posts/redis/redis-sentinel-cluster/</link>
+      <pubDate>Mon, 10 Jan 2022 01:11:11 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/redis/redis-sentinel-cluster/</guid>
+      <description>主从模式下的高可用，通过哨兵机制来保证，哨兵机制可以实现主从库的自动切换，解决主从复制模式下的故障转移，主要任务是 监控、选主、通知。 哨兵是一</description>
+    </item>
+    
+    <item>
+      <title>Optimizing Java</title>
+      <link>https://liguangchang.cn/posts/java/optimizing-java/</link>
+      <pubDate>Fri, 07 Jan 2022 23:19:15 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/java/optimizing-java/</guid>
+      <description>性能调优没有任何灵丹妙药，任何性能决策，都要通过合理的性能测试来检验。 应用程序的性能很多时候不是用时间而是用人民币来计算的，所有的性能问题都</description>
+    </item>
+    
+    <item>
+      <title>Consistency Hash</title>
+      <link>https://liguangchang.cn/posts/distributed/consistency-hash/</link>
+      <pubDate>Fri, 07 Jan 2022 13:18:09 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/distributed/consistency-hash/</guid>
+      <description>这几天在看 redis 看了不少哈希，昨天晚上又看之前的分布式的东西，看到分布式高可靠的负载均衡，里面也有哈希来做负载均衡，但是都没有解决有状态的，根据</description>
+    </item>
+    
+    <item>
+      <title>Redis Basic</title>
+      <link>https://liguangchang.cn/posts/redis/redis-basic/</link>
+      <pubDate>Tue, 04 Jan 2022 21:56:53 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/redis/redis-basic/</guid>
+      <description>数据结构 Value String List Hash Set Sorted Set 底层数据结构 简单动态字符串 双向链表 压缩列表 哈希表 跳表 整数数组 mapping String 简单动态字符串 List 双向链表 压缩列表 Hash 压缩列表 哈希表 Sorted Set 压</description>
+    </item>
+    
+    <item>
+      <title>Class load</title>
+      <link>https://liguangchang.cn/posts/java/class-load/</link>
+      <pubDate>Sun, 12 Dec 2021 13:07:55 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/java/class-load/</guid>
+      <description>Class load jvm 装载 class 分为 加载 -&amp;gt; 连接（验证-&amp;gt;准备-&amp;gt;解析）-&amp;gt; 初始化。 condition Class 文件只有在必须要使用的时候才会被装载，NoClassDe</description>
+    </item>
+    
+    <item>
+      <title>Class</title>
+      <link>https://liguangchang.cn/posts/java/class/</link>
+      <pubDate>Sun, 12 Dec 2021 10:21:27 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/java/class/</guid>
+      <description>Jvm 的跨平台可以让一份 Class 文件运行在不通的平台上，Class 作为异构语言和 JVM 之间的重要桥梁，可以由源代码被编译成 Class 文件，并最终在 JVM 上执行，Clo</description>
+    </item>
+    
+    <item>
+      <title>Java-KeyWord</title>
+      <link>https://liguangchang.cn/posts/java/java-keyword/</link>
+      <pubDate>Sun, 12 Dec 2021 09:37:51 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/java/java-keyword/</guid>
+      <description>final 关键字可以用在 类、方法、参数上面，来告知编译器一块数据是恒等不变的。 final 让基本数据类型数值恒定不变，引用对象(包括数组)引用恒定不变。 被 static final</description>
+    </item>
+    
+    <item>
+      <title>Elasticsearch 生态，安装</title>
+      <link>https://liguangchang.cn/posts/es/es-install/</link>
+      <pubDate>Mon, 29 Nov 2021 22:25:44 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/es/es-install/</guid>
+      <description>Elasticsearch 7.15.2 安装。 Lucene 基于 Java 语言开发的搜索引擎类库 创建于1999年，2005 年成为 Apache 顶级开源项目 高性能、易拓展 局限性 只能基于 Java 语言开发 类库的接口学习曲</description>
+    </item>
+    
+    <item>
+      <title>Reference Counting</title>
+      <link>https://liguangchang.cn/posts/gc/reference_counting/</link>
+      <pubDate>Tue, 16 Nov 2021 21:53:06 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/gc/reference_counting/</guid>
+      <description>GC本来就是一种释放怎么都无法被引用的对象的机制，1960 年George E·Collins 提出。 count 计数器是无符号的整数，用于计数的位数根据算</description>
+    </item>
+    
+    <item>
+      <title>Mark Sweep GC</title>
+      <link>https://liguangchang.cn/posts/gc/mark_sweep/</link>
+      <pubDate>Mon, 15 Nov 2021 23:10:47 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/gc/mark_sweep/</guid>
+      <description>标记清楚算法由标记阶段和清除阶段 标记阶段把所有活动对象打上标记 清除阶段把没有标记的对象回收 mark phase 首先标记根直接引用的对象（在内存中存活的对象）</description>
+    </item>
+    
+    <item>
+      <title>Garbage Collection</title>
+      <link>https://liguangchang.cn/posts/gc/garbage_collection/</link>
+      <pubDate>Mon, 15 Nov 2021 21:57:17 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/gc/garbage_collection/</guid>
+      <description>1960年，McCarthy 在其论文中首次发布了GC算法，标记清除算法，Mark Sweep GC。 GC要做的事情 找到内存中的垃圾 回收垃圾，使得内存可以</description>
+    </item>
+    
+    <item>
+      <title>TCP超时和重传</title>
+      <link>https://liguangchang.cn/posts/tcp/tcp-timeout-repeat/</link>
+      <pubDate>Thu, 21 Oct 2021 22:32:49 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/tcp/tcp-timeout-repeat/</guid>
+      <description>TCP 的可靠性，在下层网络(IP) 出现丢失、重复、乱序的时候，会重传认为已经丢失的包。 当数据短或确认消息丢失，TCP启动重传操作，重传尚未确认的</description>
+    </item>
+    
+    <item>
+      <title>Transaction-2PC,3PC,BASE</title>
+      <link>https://liguangchang.cn/posts/distributed/distributed-transaction/</link>
+      <pubDate>Sun, 17 Oct 2021 23:41:03 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/distributed/distributed-transaction/</guid>
+      <description>事务 Transaction ，一种机制，将包含一系列操作的工作序列纳入到一个不可分隔的执行单元，只有把操作均被正确执行才能提交事务，任意一个操作失败都会导致整个事</description>
+    </item>
+    
+    <item>
+      <title>Consensus、Consistency、FLP、CAP、Byzantine、PoW</title>
+      <link>https://liguangchang.cn/posts/distributed/distributed-consensus/</link>
+      <pubDate>Sat, 16 Oct 2021 23:36:46 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/distributed/distributed-consensus/</guid>
+      <description>Consensus 和 Consistency，前者侧重于集群节点达成一致的过程和算法，后者侧重于节点共识过程最终所有数据状态副本对外表现的数据一致性。 传统分布</description>
+    </item>
+    
+    <item>
+      <title>Byzantine、PBFT</title>
+      <link>https://liguangchang.cn/posts/distributed/distributed-pbft/</link>
+      <pubDate>Sat, 16 Oct 2021 22:32:43 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/distributed/distributed-pbft/</guid>
+      <description>Practical Byzantine Fault Tolerance,PBFT，实用拜占庭容错算法，在1999年召开的第三届操作系统设计与实现研讨会上有 Miguel Castro 和 Barbara Liskov 提出，(经常两个人)，</description>
+    </item>
+    
+    <item>
+      <title>The Raft Consensus Algorithm</title>
+      <link>https://liguangchang.cn/posts/distributed/distributed-raft/</link>
+      <pubDate>Fri, 15 Oct 2021 00:39:41 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/distributed/distributed-raft/</guid>
+      <description>历史 Raft 算法是 2013 年由斯坦福大学的 Diego Ongaro 和 John Ousterhout 提出的一种适用于非拜占庭容错环境下的分布式一致性算法，用于替代复杂的 Paxos 算法，安全性更高。 Raft 算法能在为</description>
+    </item>
+    
+    <item>
+      <title>Distributed leader election</title>
+      <link>https://liguangchang.cn/posts/distributed/distributed-election/</link>
+      <pubDate>Thu, 14 Oct 2021 00:00:39 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/distributed/distributed-election/</guid>
+      <description>分布式系统集群中，选举出来的 leader 节点负责对其他节点的协调和管理，保证集群内节点有序运行和数据的一致性，记录一些选主的算法。 Bully 在所有存活的节点中</description>
+    </item>
+    
+    <item>
+      <title>分布式协调、同步(中心化)</title>
+      <link>https://liguangchang.cn/posts/distributed/distributed-coordination/</link>
+      <pubDate>Mon, 11 Oct 2021 00:23:19 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/distributed/distributed-coordination/</guid>
+      <description>Distributed Mutual Exclusion 分布式互斥: 分布式系统里面排他性的资源访问方式，被互斥访问的共享资源就是临界资源(Critical Resource)。 集中式算法/中央</description>
+    </item>
+    
+    <item>
+      <title>单机-&gt;分布式</title>
+      <link>https://liguangchang.cn/posts/distributed/distributed-introduction/</link>
+      <pubDate>Sat, 02 Oct 2021 04:06:19 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/distributed/distributed-introduction/</guid>
+      <description>记录分布式由单机发展到分布式集群的一些驱动因素和存在的问题，十一回家路上看了一夜，凌晨四点到家编辑一下。。。 单机模式 所有应用程序和数据均部署</description>
+    </item>
+    
+    <item>
+      <title>分布式缓存</title>
+      <link>https://liguangchang.cn/posts/distributed/distributed-cache/</link>
+      <pubDate>Fri, 01 Oct 2021 12:40:40 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/distributed/distributed-cache/</guid>
+      <description>Cache 缓存：存储在计算机上的一个原始数据复制集，以便于访问。 属于存储领域，目的是为了让算法便捷高速运行，提升用户体验、系统性能。 Linux 的页表（pag</description>
+    </item>
+    
+    <item>
+      <title>TCP Command</title>
+      <link>https://liguangchang.cn/posts/tcp/tcp-command/</link>
+      <pubDate>Thu, 23 Sep 2021 01:25:43 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/tcp/tcp-command/</guid>
+      <description>ip curl https://api.myip.com | json nc 我喜欢用这个 nc -vz -w 1 ip port -w 1 # TTL 1s ss ss ss -ltp | grep sshd # 查看进程的端口占用 ss -p | grep 22 # 查看端口被哪个进程占用 ss -tenp | grep 22 # 列出某个端口上</description>
+    </item>
+    
+    <item>
+      <title>TCP状态转换</title>
+      <link>https://liguangchang.cn/posts/tcp/tcp-status/</link>
+      <pubDate>Wed, 22 Sep 2021 23:12:55 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/tcp/tcp-status/</guid>
+      <description>TIME_WAIT TIME_WAIT 状态也称为2MSL等待状态，该状态中，TCP会等待两倍于最大段生存期(Maximum Segment Lifetime，MSL)的时间，有时也被称作加倍</description>
+    </item>
+    
+    <item>
+      <title>TCP选项</title>
+      <link>https://liguangchang.cn/posts/tcp/tcp-options/</link>
+      <pubDate>Fri, 17 Sep 2021 02:30:10 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/tcp/tcp-options/</guid>
+      <description>TCP头部包含了多个选项，选项列表结束(End of Option List ,EOL)、无操作(No operation，NOP) 以及最大段大小 (Maximum Segment Size，MSS)</description>
+    </item>
+    
+    <item>
+      <title>Redis 数据结构</title>
+      <link>https://liguangchang.cn/posts/redis/redis-dso/</link>
+      <pubDate>Tue, 14 Sep 2021 00:40:34 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/redis/redis-dso/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>TCP应用</title>
+      <link>https://liguangchang.cn/posts/tcp/tcp-apply/</link>
+      <pubDate>Sat, 04 Sep 2021 09:56:34 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/tcp/tcp-apply/</guid>
+      <description>扫描主机 扫描端口 防御扫描 探测防火墙 跟踪路由 探测网络性能 干扰连接，重置回话，检查盲注攻击漏洞</description>
+    </item>
+    
+    <item>
+      <title>TCP数据传输-分片、滑动窗口、重发、流控制</title>
+      <link>https://liguangchang.cn/posts/tcp/tcp-transmission/</link>
+      <pubDate>Wed, 01 Sep 2021 01:28:08 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/tcp/tcp-transmission/</guid>
+      <description>通信问题 自身不包含可靠传递数据机制的协议，他们可能会使用用一种像数据校验和或者CRC这样的数学函数来检测收到的有差错的数据，但是他们不会去纠</description>
+    </item>
+    
+    <item>
+      <title>TCP报文格式、连接管理</title>
+      <link>https://liguangchang.cn/posts/tcp/tcp-connect-management/</link>
+      <pubDate>Tue, 31 Aug 2021 22:56:43 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/tcp/tcp-connect-management/</guid>
+      <description>传输层(Transport Layer)是 OSI 协议的第四层协议，是唯一负责总体的数据传输和数据控制传输层的一层协议 传输层作用 网际层提供了主机之间</description>
+    </item>
+    
+    <item>
+      <title>Prometheus</title>
+      <link>https://liguangchang.cn/posts/go/prometheus/</link>
+      <pubDate>Sat, 21 Aug 2021 11:26:29 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/go/prometheus/</guid>
+      <description>Prometheus 由 SoundCloud 用Go语言编写并开源的监控告警系统，自带时序数据库，采用 Pull 方式获取监控信息，提供了多维度的数据模型和灵活的查询接口。 不仅可以通过静态文</description>
+    </item>
+    
+    <item>
+      <title>Golang Programming Language</title>
+      <link>https://liguangchang.cn/posts/go/go-basic/</link>
+      <pubDate>Wed, 11 Aug 2021 01:17:20 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/go/go-basic/</guid>
+      <description>package main import ( &amp;#34;fmt&amp;#34; &amp;#34;image&amp;#34; &amp;#34;image/color&amp;#34; &amp;#34;image/gif&amp;#34; &amp;#34;io&amp;#34; &amp;#34;log&amp;#34; &amp;#34;math&amp;#34; &amp;#34;math/rand&amp;#34; &amp;#34;net/http&amp;#34; &amp;#34;sync&amp;#34; ) var mu sync.Mutex var count int func main() { http.HandleFunc(&amp;#34;/&amp;#34;, handler) http.HandleFunc(&amp;#34;/count&amp;#34;, counter) http.HandleFunc(&amp;#34;/lsr&amp;#34;, func(w http.ResponseWriter, r *http.Request) { //handler(w,r) lissajous(w) }) log.Fatal(http.ListenAndServe(&amp;#34;localhost:8000&amp;#34;, nil)) } func handler(w http.ResponseWriter, r *http.Request) { fmt.Fprintf(w, &amp;#34;%s\t\t%s\t%s\n&amp;#34;, r.Method, r.URL, r.Proto) for k, v := range r.Header { fmt.Fprintf(w, &amp;#34;Header[%q]=%q\n&amp;#34;, k, v) } fmt.Fprintf(w, &amp;#34;Host = %q\n&amp;#34;, r.Host) fmt.Fprintf(w, &amp;#34;RemoteAddr</description>
+    </item>
+    
+  </channel>
+</rss>

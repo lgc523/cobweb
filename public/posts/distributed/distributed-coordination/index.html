@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="lgc523 ">
+<meta name="description" content="Distributed Mutual Exclusion 分布式互斥: 分布式系统里面排他性的资源访问方式，被互斥访问的共享资源就是临界资源(Critical Resource)。 集中式算法/中央" />
+<meta name="keywords" content=", distributed" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://liguangchang.cn/posts/distributed/distributed-coordination/" />
+
+
+    <title>
+        
+            分布式协调、同步(中心化) :: 互联网没一个好东西 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.4e5c639214707eff609bb55fe49e183dee42258a73bc90e4cc7b0a84f900798a.css">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="分布式协调、同步(中心化)">
+<meta itemprop="description" content="Distributed Mutual Exclusion 分布式互斥: 分布式系统里面排他性的资源访问方式，被互斥访问的共享资源就是临界资源(Critical Resource)。 集中式算法/中央"><meta itemprop="datePublished" content="2021-10-11T00:23:19+08:00" />
+<meta itemprop="dateModified" content="2021-10-11T00:23:19+08:00" />
+<meta itemprop="wordCount" content="1520">
+<meta itemprop="keywords" content="distributed," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="分布式协调、同步(中心化)"/>
+<meta name="twitter:description" content="Distributed Mutual Exclusion 分布式互斥: 分布式系统里面排他性的资源访问方式，被互斥访问的共享资源就是临界资源(Critical Resource)。 集中式算法/中央"/>
+
+
+
+
+    <meta property="og:title" content="分布式协调、同步(中心化)" />
+<meta property="og:description" content="Distributed Mutual Exclusion 分布式互斥: 分布式系统里面排他性的资源访问方式，被互斥访问的共享资源就是临界资源(Critical Resource)。 集中式算法/中央" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://liguangchang.cn/posts/distributed/distributed-coordination/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-10-11T00:23:19+08:00" />
+<meta property="article:modified_time" content="2021-10-11T00:23:19+08:00" /><meta property="og:site_name" content="互联网没一个好东西" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2021-10-11 00:23:19 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ 无需执妄为真 则自在无碍</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#1b1c1d;
+                   animation-duration:5s;">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">|</a></li><li><a href="/posts">post</a></li><li><a href="/about">about</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+                <span class="theme-toggle not-selectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+   <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+   3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+   13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+ </svg></span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        4 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://liguangchang.cn/posts/distributed/distributed-coordination/">分布式协调、同步(中心化)</a>
+      </h1>
+
+      
+
+      
+        <hr />
+        <aside id="toc">
+          <div class="toc-title">Table of Contents</div>
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#distributed-mutual-exclusion">Distributed Mutual Exclusion</a></li>
+    <li><a href="#集中式算法中央服务器算法">集中式算法/中央服务器算法</a></li>
+    <li><a href="#协商算法">协商算法</a>
+      <ul>
+        <li><a href="#问题">问题</a></li>
+        <li><a href="#改进">改进</a></li>
+      </ul>
+    </li>
+    <li><a href="#令牌环算法">令牌环算法</a>
+      <ul>
+        <li><a href="#缺点">缺点</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+</nav>
+        </aside>
+        <hr />
+
+      
+
+      <div class="post-content">
+        <h2 id="distributed-mutual-exclusion">Distributed Mutual Exclusion</h2>
+<p>分布式互斥: 分布式系统里面排他性的资源访问方式，被互斥访问的共享资源就是临界资源(Critical Resource)。</p>
+<h2 id="集中式算法中央服务器算法">集中式算法/中央服务器算法</h2>
+<p>引入协调者程序，在每个程序在需要访问临界资源时，先给协调者发送请求，没有程序占用就直接授权访问，否则进入队列排队。有程序释放了资源，通知协调者取出队列中的候选者，给它授权，队列中第一个最为候选者被授权，占用临界资源。</p>
+<p>协调者代表集中程序或中央服务器，每个程序完成一次临界资源占用，需要和协调者交互三次。</p>
+<ol>
+<li>客户端程序向协调者申请占用</li>
+<li>协调者允许客户端占用</li>
+<li>客户端释放资源，通知协调者</li>
+</ol>
+<p>集中式算法简单、交互量少，客户端只和协调者通信，但是，协调者会成为瓶颈并且不可靠。</p>
+<ul>
+<li>
+<p>通信量和客户端增长线性正比，需要占用资源的客户端越多，客户端和协调者之间的通信量也就越多</p>
+</li>
+<li>
+<p>单点故障，协调者故障，临界资源全部无法访问，整个系统不可用。</p>
+</li>
+</ul>
+<p>通过对中央服务器进行主备来保证可用，故障后备份机可以直接顶上来，数据一致的情况下可以实现分布式协调功能。</p>
+<h2 id="协商算法">协商算法</h2>
+<p>当客户端要占用临界资源，向系统中的其他程序发送一条请求消息，接收到所有客户端同意消息后，才可以占用临界资源，以民主协商的形式占用资源。</p>
+<p>这样<strong>一个客户端占用一次临界资源要和集群内其他节点(客户端)都询问一次</strong>，<strong>接收到其他客户端的ACK后，才可以占用临界资源</strong>，这样一来一回，就是2*(n-1) 次通信，通信量随着集群内节点的数量呈指数增长。</p>
+<h3 id="问题">问题</h3>
+<p>以上两种算法，依据队列排队、全票协商的机制，能够很方便的实现安全的占用资源，但是性能和可用性都很低。</p>
+<ol>
+<li>集群内节点拓展，通信量增长容易引起“信令风暴”，类似于单机环境JAVA SYNC大量锁升级后总线风暴，中央协调者压力比较大，如果出现瓶颈，会导致可用性降低甚至不可用。</li>
+<li>客户端节点故障不可用，需要占用的客户端节点等不到其他所有的节点ACK，整个系统hang住导致不可用，相比于中央协调者故障可用性更低。</li>
+</ol>
+<h3 id="改进">改进</h3>
+<p>针对上面第二点优化，如果检测到集群中节点故障，直接忽略，不再等待该故障节点的ACK，但是对其他每一个节点进行故障检测又是一个复杂的功能点。</p>
+<p>上述两种算法，可以在集群中节点比较少、临界资源访问量少并且都相对比较可靠的情况下使用。</p>
+<h2 id="令牌环算法">令牌环算法</h2>
+<p>集群内节点构成一个环，令牌按照约定好的方向在集群节点中传递，收到令牌的节点可以占用资源，释放完资源将令牌继续向后传递，如果当前节点不需要访问临界资源，继续将令牌向后传递。是一种比较公平的算法，适合规模小，节点占用临界资源高、占用时间短的场景。</p>
+<p>典型应用场景:无人机通信(通信渠道是临界资源)，前几天郑州的无人机掉下来了，被人用信号恶意干扰了，我的天。</p>
+<h3 id="缺点">缺点</h3>
+<ol>
+<li>环内节点都要参与传递令牌，无论是否想要占用资源，如果只有少量节点需要占用资源，将会有很多无效的传递通信，资源浪费，并且真正需要占用资源的节点等待周期较长。</li>
+<li>单点故障，直接跳过传递到下一个节点，最简单就是维护前后节点，也是构成环的基本条件，进一步保障可用性，可以维护全量节点信息，防止接连节点的连接故障。或者增加RST，超时断开链接进行复位，重新开始。</li>
+</ol>
+<h2 id="总结">总结</h2>
+<p>上述几种分布式协调算法都是比较简单，适合规模比较小的场景，整体的可用性需要靠每一个节点的可用来保障。</p>
+<p>可以说是强行往分布式上靠，感觉和单机环境下的多线程没什么区别，单机多线程下也有公平、非公平、锁饥饿、锁升级、锁降级、总线风暴。。。</p>
+<p>上述算法也可以通过增加权重、RST重开、超时/故障检测、Heartbeat+HAProxy 进一步提高可用性、效率，权重像钟表的时分秒的分层次的时间轮算法可以避免OS空转浪费资源。&lt;TODO这一块待研究&gt;</p>
+<p>总之，单点、有中心的架构就像墨菲定律，总会故障，还会有瓶颈。</p>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://liguangchang.cn/tags/distributed/">distributed</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        1520 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2021-10-11 00:23
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+    <div class="pagination">
+        
+        <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+        </div>
+        
+
+        <div class="pagination__buttons">
+            
+            <span class="button previous">
+                <a href="https://liguangchang.cn/posts/distributed/distributed-election/">
+                    <span class="button__icon">←</span>
+                    <span class="button__text">Distributed leader election</span>
+                </a>
+            </span>
+            
+
+            
+            <span class="button next">
+                <a href="https://liguangchang.cn/posts/distributed/distributed-introduction/">
+                    <span class="button__text">单机-&gt;分布式</span>
+                    <span class="button__icon">→</span>
+                </a>
+            </span>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            
+            
+            
+            
+            <span>Powered by Hugo · hello-friend-ng</span>
+        </div>
+    </div>
+    
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span> &#183; <a href="https://beian.miit.gov.cn">京ICP备2020035531号-2</a> &#183; <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41012202000328" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"></span>
+        </div>
+    </div>
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2d3d449fc0ff117f00ac91342a8f76cd5b710411d7a0254dbe75da3234d2f685d6a0c44cff60c414e90b6a149da8e4032c713c25e4e6838e2e3918dc0ad2e81c.js" integrity="sha512-LT1En8D/EX8ArJE0Ko92zVtxBBHXoCVNvnXaMjTS9oXWoMRM/2DEFOkLahSdqOQDLHE8JeTmg44uORjcCtLoHA=="></script>
+
+
+
+    </body>
+</html>

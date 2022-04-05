@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="spider">
+<meta name="description" content="package main import ( &amp;#34;fmt&amp;#34; &amp;#34;image&amp;#34; &amp;#34;image/color&amp;#34; &amp;#34;image/gif&amp;#34; &amp;#34;io&amp;#34; &amp;#34;log&amp;#34; &amp;#34;math&amp;#34; &amp;#34;math/rand&amp;#34; &amp;#34;net/http&amp;#34; &amp;#34;sync&amp;#34; ) var mu sync.Mutex var count int func main() { http.HandleFunc(&amp;#34;/&amp;#34;, handler) http.HandleFunc(&amp;#34;/count&amp;#34;, counter) http.HandleFunc(&amp;#34;/lsr&amp;#34;, func(w http.ResponseWriter, r *http.Request) { //handler(w,r) lissajous(w) }) log.Fatal(http.ListenAndServe(&amp;#34;localhost:8000&amp;#34;, nil)) } func handler(w http.ResponseWriter, r *http.Request) { fmt.Fprintf(w, &amp;#34;%s\t\t%s\t%s\n&amp;#34;, r.Method, r.URL, r.Proto) for k, v := range r.Header { fmt.Fprintf(w, &amp;#34;Header[%q]=%q\n&amp;#34;, k, v) } fmt.Fprintf(w, &amp;#34;Host = %q\n&amp;#34;, r.Host) fmt.Fprintf(w, &amp;#34;RemoteAddr" />
+<meta name="keywords" content=", go" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://liguangchang.cn/posts/go/go-basic/" />
+
+
+    <title>
+        
+            Golang Programming Language :: 互联网没一个好东西 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.4e5c639214707eff609bb55fe49e183dee42258a73bc90e4cc7b0a84f900798a.css">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Golang Programming Language">
+<meta itemprop="description" content="package main import ( &#34;fmt&#34; &#34;image&#34; &#34;image/color&#34; &#34;image/gif&#34; &#34;io&#34; &#34;log&#34; &#34;math&#34; &#34;math/rand&#34; &#34;net/http&#34; &#34;sync&#34; ) var mu sync.Mutex var count int func main() { http.HandleFunc(&#34;/&#34;, handler) http.HandleFunc(&#34;/count&#34;, counter) http.HandleFunc(&#34;/lsr&#34;, func(w http.ResponseWriter, r *http.Request) { //handler(w,r) lissajous(w) }) log.Fatal(http.ListenAndServe(&#34;localhost:8000&#34;, nil)) } func handler(w http.ResponseWriter, r *http.Request) { fmt.Fprintf(w, &#34;%s\t\t%s\t%s\n&#34;, r.Method, r.URL, r.Proto) for k, v := range r.Header { fmt.Fprintf(w, &#34;Header[%q]=%q\n&#34;, k, v) } fmt.Fprintf(w, &#34;Host = %q\n&#34;, r.Host) fmt.Fprintf(w, &#34;RemoteAddr"><meta itemprop="datePublished" content="2021-08-11T01:17:20+08:00" />
+<meta itemprop="dateModified" content="2021-08-11T01:17:20+08:00" />
+<meta itemprop="wordCount" content="890">
+<meta itemprop="keywords" content="go," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Golang Programming Language"/>
+<meta name="twitter:description" content="package main import ( &#34;fmt&#34; &#34;image&#34; &#34;image/color&#34; &#34;image/gif&#34; &#34;io&#34; &#34;log&#34; &#34;math&#34; &#34;math/rand&#34; &#34;net/http&#34; &#34;sync&#34; ) var mu sync.Mutex var count int func main() { http.HandleFunc(&#34;/&#34;, handler) http.HandleFunc(&#34;/count&#34;, counter) http.HandleFunc(&#34;/lsr&#34;, func(w http.ResponseWriter, r *http.Request) { //handler(w,r) lissajous(w) }) log.Fatal(http.ListenAndServe(&#34;localhost:8000&#34;, nil)) } func handler(w http.ResponseWriter, r *http.Request) { fmt.Fprintf(w, &#34;%s\t\t%s\t%s\n&#34;, r.Method, r.URL, r.Proto) for k, v := range r.Header { fmt.Fprintf(w, &#34;Header[%q]=%q\n&#34;, k, v) } fmt.Fprintf(w, &#34;Host = %q\n&#34;, r.Host) fmt.Fprintf(w, &#34;RemoteAddr"/>
+
+
+
+
+    <meta property="og:title" content="Golang Programming Language" />
+<meta property="og:description" content="package main import ( &#34;fmt&#34; &#34;image&#34; &#34;image/color&#34; &#34;image/gif&#34; &#34;io&#34; &#34;log&#34; &#34;math&#34; &#34;math/rand&#34; &#34;net/http&#34; &#34;sync&#34; ) var mu sync.Mutex var count int func main() { http.HandleFunc(&#34;/&#34;, handler) http.HandleFunc(&#34;/count&#34;, counter) http.HandleFunc(&#34;/lsr&#34;, func(w http.ResponseWriter, r *http.Request) { //handler(w,r) lissajous(w) }) log.Fatal(http.ListenAndServe(&#34;localhost:8000&#34;, nil)) } func handler(w http.ResponseWriter, r *http.Request) { fmt.Fprintf(w, &#34;%s\t\t%s\t%s\n&#34;, r.Method, r.URL, r.Proto) for k, v := range r.Header { fmt.Fprintf(w, &#34;Header[%q]=%q\n&#34;, k, v) } fmt.Fprintf(w, &#34;Host = %q\n&#34;, r.Host) fmt.Fprintf(w, &#34;RemoteAddr" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://liguangchang.cn/posts/go/go-basic/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-08-11T01:17:20+08:00" />
+<meta property="article:modified_time" content="2021-08-11T01:17:20+08:00" /><meta property="og:site_name" content="互联网没一个好东西" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2021-08-11 01:17:20 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ 无需执妄为真 则自在无碍</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#1b1c1d;
+                   animation-duration:5s;">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">|</a></li><li><a href="/posts">post</a></li><li><a href="/about">about</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+                <span class="theme-toggle not-selectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+   <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+   3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+   13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+ </svg></span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        2 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://liguangchang.cn/posts/go/go-basic/">Golang Programming Language</a>
+      </h1>
+
+      
+
+      
+        <hr />
+        <aside id="toc">
+          <div class="toc-title">Table of Contents</div>
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#printf-verb">printf verb</a></li>
+    <li><a href="#new">new</a></li>
+    <li><a href="#escape">escape</a></li>
+    <li><a href="#多重赋值推演">多重赋值推演</a></li>
+    <li><a href="#基本数据类型">基本数据类型</a></li>
+  </ul>
+</nav>
+        </aside>
+        <hr />
+
+      
+
+      <div class="post-content">
+        <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;image&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;image/color&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;image/gif&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;io&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;log&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;math&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;math/rand&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;net/http&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;sync&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">mu</span> <span style="color:#a6e22e">sync</span>.<span style="color:#a6e22e">Mutex</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">count</span> <span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandleFunc</span>(<span style="color:#e6db74">&#34;/&#34;</span>, <span style="color:#a6e22e">handler</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandleFunc</span>(<span style="color:#e6db74">&#34;/count&#34;</span>, <span style="color:#a6e22e">counter</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">HandleFunc</span>(<span style="color:#e6db74">&#34;/lsr&#34;</span>, <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Request</span>) {
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">//handler(w,r)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#a6e22e">lissajous</span>(<span style="color:#a6e22e">w</span>)
+</span></span><span style="display:flex;"><span>	})
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Fatal</span>(<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ListenAndServe</span>(<span style="color:#e6db74">&#34;localhost:8000&#34;</span>, <span style="color:#66d9ef">nil</span>))
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">handler</span>(<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Request</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Fprintf</span>(<span style="color:#a6e22e">w</span>, <span style="color:#e6db74">&#34;%s\t\t%s\t%s\n&#34;</span>, <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Method</span>, <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">URL</span>, <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Proto</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Header</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Fprintf</span>(<span style="color:#a6e22e">w</span>, <span style="color:#e6db74">&#34;Header[%q]=%q\n&#34;</span>, <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Fprintf</span>(<span style="color:#a6e22e">w</span>, <span style="color:#e6db74">&#34;Host = %q\n&#34;</span>, <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Host</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Fprintf</span>(<span style="color:#a6e22e">w</span>, <span style="color:#e6db74">&#34;RemoteAddr = %q\n&#34;</span>, <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">RemoteAddr</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">ParseForm</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Print</span>(<span style="color:#a6e22e">err</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Form</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Fprintf</span>(<span style="color:#a6e22e">w</span>, <span style="color:#e6db74">&#34;Form[%q] = %q\n&#34;</span>, <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">mu</span>.<span style="color:#a6e22e">Lock</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">count</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">mu</span>.<span style="color:#a6e22e">Unlock</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//fmt.Fprintf(w, &#34;HTTP.METHOD:%s\nURL.PATH=%q\n&#34;, r.Method, r.URL.Path)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//count
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">counter</span>(<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Request</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">mu</span>.<span style="color:#a6e22e">Lock</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Fprintf</span>(<span style="color:#a6e22e">w</span>, <span style="color:#e6db74">&#34;Count %d\n&#34;</span>, <span style="color:#a6e22e">count</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">mu</span>.<span style="color:#a6e22e">Unlock</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">lissajous</span>(<span style="color:#a6e22e">out</span> <span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">Writer</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">mu</span>.<span style="color:#a6e22e">Lock</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">count</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">mu</span>.<span style="color:#a6e22e">Unlock</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">palette</span> = []<span style="color:#a6e22e">color</span>.<span style="color:#a6e22e">Color</span>{<span style="color:#a6e22e">color</span>.<span style="color:#a6e22e">Opaque</span>, <span style="color:#a6e22e">color</span>.<span style="color:#a6e22e">Black</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">const</span> (
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">whiteIndex</span> = <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">blackIndex</span> = <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>	)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">const</span> (
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">cycles</span>  = <span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">res</span>     = <span style="color:#ae81ff">0.001</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">size</span>    = <span style="color:#ae81ff">100</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">nframes</span> = <span style="color:#ae81ff">64</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">delay</span>   = <span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span>	)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">freq</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rand</span>.<span style="color:#a6e22e">Float64</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">anim</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">gif</span>.<span style="color:#a6e22e">GIF</span>{<span style="color:#a6e22e">LoopCount</span>: <span style="color:#a6e22e">nframes</span>}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">phase</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0.0</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">nframes</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">rect</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">image</span>.<span style="color:#a6e22e">Rect</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span><span style="color:#f92672">*</span><span style="color:#a6e22e">size</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span><span style="color:#f92672">*</span><span style="color:#a6e22e">size</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">img</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">image</span>.<span style="color:#a6e22e">NewPaletted</span>(<span style="color:#a6e22e">rect</span>, <span style="color:#a6e22e">palette</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">t</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0.0</span>; <span style="color:#a6e22e">t</span> &lt; <span style="color:#a6e22e">cycles</span><span style="color:#f92672">*</span><span style="color:#ae81ff">2</span><span style="color:#f92672">*</span><span style="color:#a6e22e">math</span>.<span style="color:#a6e22e">Pi</span>; <span style="color:#a6e22e">t</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">res</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">x</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">math</span>.<span style="color:#a6e22e">Sin</span>(<span style="color:#a6e22e">t</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">y</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">math</span>.<span style="color:#a6e22e">Sin</span>(<span style="color:#a6e22e">t</span><span style="color:#f92672">*</span><span style="color:#a6e22e">freq</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">phase</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">img</span>.<span style="color:#a6e22e">SetColorIndex</span>(<span style="color:#a6e22e">size</span><span style="color:#f92672">+</span>int(<span style="color:#a6e22e">x</span><span style="color:#f92672">*</span><span style="color:#a6e22e">size</span><span style="color:#f92672">+</span><span style="color:#ae81ff">0.5</span>), <span style="color:#a6e22e">size</span><span style="color:#f92672">+</span>int(<span style="color:#a6e22e">y</span><span style="color:#f92672">*</span><span style="color:#a6e22e">size</span><span style="color:#f92672">+</span><span style="color:#ae81ff">0.5</span>), <span style="color:#a6e22e">blackIndex</span>)
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">phase</span> <span style="color:#f92672">+=</span> <span style="color:#ae81ff">0.1</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">anim</span>.<span style="color:#a6e22e">Delay</span> = append(<span style="color:#a6e22e">anim</span>.<span style="color:#a6e22e">Delay</span>, <span style="color:#a6e22e">delay</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">anim</span>.<span style="color:#a6e22e">Image</span> = append(<span style="color:#a6e22e">anim</span>.<span style="color:#a6e22e">Image</span>, <span style="color:#a6e22e">img</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">gif</span>.<span style="color:#a6e22e">EncodeAll</span>(<span style="color:#a6e22e">out</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">anim</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="printf-verb">printf verb</h2>
+<table>
+<thead>
+<tr>
+<th>Verb</th>
+<th>Desc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>%d</td>
+<td>十进制</td>
+</tr>
+<tr>
+<td>%x %o %b</td>
+<td>十六进制、八进制、二进制整数</td>
+</tr>
+<tr>
+<td>%f %g %e</td>
+<td>浮点数，g自动保持足够的精度，最简洁，e有指数，f无指数</td>
+</tr>
+<tr>
+<td>%t</td>
+<td>布尔型</td>
+</tr>
+<tr>
+<td>%c</td>
+<td>字符 unicode码点</td>
+</tr>
+<tr>
+<td>%s</td>
+<td>字符串</td>
+</tr>
+<tr>
+<td>%q</td>
+<td>带引号的字符串/字符</td>
+</tr>
+<tr>
+<td>%v</td>
+<td>内置格式的任何值</td>
+</tr>
+<tr>
+<td>%T</td>
+<td>任何值的类型</td>
+</tr>
+<tr>
+<td>%%</td>
+<td>百分号</td>
+</tr>
+<tr>
+<td>%[1]</td>
+<td>重复使用第一个操作数</td>
+</tr>
+<tr>
+<td>%#</td>
+<td>输出相应的前缀</td>
+</tr>
+</tbody>
+</table>
+<h2 id="new">new</h2>
+<p>New 是一种内置创建变量的函数，new(T) 创建一个未命名的T类型变量，初始化为T类型的零值，并返回其地址*T，和取地址的普通局部变量没有什么不同，只是不需要引入一个虚拟的名字。</p>
+<h2 id="escape">escape</h2>
+<p><strong>每一次变量逃逸都需要一次额外的内存分配过程</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">global</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">f</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">x</span> <span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">x</span> = <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// f() 返回 global 还可以访问 x ，x 从 f 中逃逸，x 使用堆空间
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">global</span> = <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">x</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">g</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">y</span> <span style="color:#f92672">:=</span> new(<span style="color:#66d9ef">int</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">*</span><span style="color:#a6e22e">y</span> = <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="多重赋值推演">多重赋值推演</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">x</span>, <span style="color:#a6e22e">y</span> = <span style="color:#a6e22e">y</span>, <span style="color:#a6e22e">x</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">j</span> = <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>
+</span></span></code></pre></div><h2 id="基本数据类型">基本数据类型</h2>
+<ul>
+<li>
+<p>Int、uint = 运算平台上运算效率最高的值</p>
+</li>
+<li>
+<p>uintptr 大小不明确，足以完整存放指针</p>
+</li>
+<li>
+<p>Rune = int32 四个字节，适合UTF-8 的变长1-4 个</p>
+</li>
+<li>
+<p>二元操作符优先级</p>
+<ul>
+<li>
+<ul>
+<li>/  % &laquo;  &raquo; &amp; &amp;^ + &mdash; | ^ == != &lt; &lt;= &gt; &gt;= &amp;&amp; || 降序</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>取模结果正负号和被除数一致</strong>，-5%3 = -2</p>
+</li>
+<li>
+<p>一元运算符</p>
+<ul>
+<li>整数 +1 = 0+1，-x = 0-x</li>
+<li>浮点数和复数 +x =x，-x=x的负数</li>
+</ul>
+</li>
+<li>
+<p>溢出丢弃</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">u</span> <span style="color:#66d9ef">uint8</span> = <span style="color:#ae81ff">255</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//255 0 1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">u</span>,<span style="color:#a6e22e">u</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,<span style="color:#a6e22e">u</span><span style="color:#f92672">*</span><span style="color:#a6e22e">u</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#66d9ef">int8</span> = <span style="color:#ae81ff">127</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">i</span>,<span style="color:#a6e22e">i</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,<span style="color:#a6e22e">i</span><span style="color:#f92672">*</span><span style="color:#a6e22e">i</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//127 -128 1
+</span></span></span></code></pre></div></li>
+<li>
+<p>浮点数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#f92672">-</span><span style="color:#ae81ff">5</span><span style="color:#f92672">%</span><span style="color:#ae81ff">3</span>)<span style="color:#75715e">//-2
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#f92672">-</span><span style="color:#ae81ff">5</span><span style="color:#f92672">%-</span><span style="color:#ae81ff">3</span>)<span style="color:#75715e">//-2
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)<span style="color:#75715e">//1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#75715e">//-1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#f92672">-</span><span style="color:#ae81ff">1.1</span>)<span style="color:#75715e">//-1.1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#f92672">+</span><span style="color:#ae81ff">1.1</span>)<span style="color:#75715e">//1.1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">u</span> <span style="color:#66d9ef">uint8</span> = <span style="color:#ae81ff">255</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//255 0 1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">u</span>,<span style="color:#a6e22e">u</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,<span style="color:#a6e22e">u</span><span style="color:#f92672">*</span><span style="color:#a6e22e">u</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#66d9ef">int8</span> = <span style="color:#ae81ff">127</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">i</span>,<span style="color:#a6e22e">i</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,<span style="color:#a6e22e">i</span><span style="color:#f92672">*</span><span style="color:#a6e22e">i</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//127 -128 1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">math</span>.<span style="color:#a6e22e">NaN</span>())
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//NaN
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">z</span> <span style="color:#66d9ef">float64</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">z</span>,<span style="color:#f92672">-</span><span style="color:#a6e22e">z</span>,<span style="color:#ae81ff">1</span><span style="color:#f92672">/</span><span style="color:#a6e22e">z</span>,<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">/</span><span style="color:#a6e22e">z</span>,<span style="color:#a6e22e">z</span><span style="color:#f92672">/</span><span style="color:#a6e22e">z</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//0 -0 +Inf -Inf NaN
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">math</span>.<span style="color:#a6e22e">IsNaN</span>(<span style="color:#a6e22e">z</span><span style="color:#f92672">/</span><span style="color:#a6e22e">z</span>))<span style="color:#75715e">//true
+</span></span></span></code></pre></div></li>
+<li>
+<p>字符串</p>
+<p>字符串的第i个字节不一定就是第i个字符，因为非ASCII字符的UTF-8码点需要两个或更多的字节。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>	<span style="color:#a6e22e">s</span><span style="color:#f92672">:=</span><span style="color:#e6db74">&#34;hello&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">t</span><span style="color:#f92672">:=</span><span style="color:#a6e22e">s</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">s</span><span style="color:#f92672">+=</span><span style="color:#e6db74">&#34;,golang&#34;</span> <span style="color:#75715e">//重新赋值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">s</span>)<span style="color:#75715e">//hello,golang
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">t</span>)<span style="color:#75715e">//hello
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">s</span>[<span style="color:#ae81ff">0</span>])<span style="color:#75715e">//104
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">字符串不可变</span> = <span style="color:#a6e22e">共用一段底层内存</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">子串的生成操作开销很低</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">不会分配新的内存</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><p>因为文件都是UTF-8编码格式，字符串会按照UTF-8解读，字符串可以包含Unicode码点。</p>
+</li>
+</ul>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://liguangchang.cn/tags/go/">go</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        890 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2021-08-11 01:17
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+    <div class="pagination">
+        
+        <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+        </div>
+        
+
+        <div class="pagination__buttons">
+            
+            <span class="button previous">
+                <a href="https://liguangchang.cn/posts/go/prometheus/">
+                    <span class="button__icon">←</span>
+                    <span class="button__text">Prometheus</span>
+                </a>
+            </span>
+            
+
+            
+        </div>
+    </div>
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            
+            
+            
+            
+            <span>Powered by Hugo · hello-friend-ng</span>
+        </div>
+    </div>
+    
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span> &#183; <a href="https://beian.miit.gov.cn">京ICP备2020035531号-2</a> &#183; <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41012202000328" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"></span>
+        </div>
+    </div>
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2d3d449fc0ff117f00ac91342a8f76cd5b710411d7a0254dbe75da3234d2f685d6a0c44cff60c414e90b6a149da8e4032c713c25e4e6838e2e3918dc0ad2e81c.js" integrity="sha512-LT1En8D/EX8ArJE0Ko92zVtxBBHXoCVNvnXaMjTS9oXWoMRM/2DEFOkLahSdqOQDLHE8JeTmg44uORjcCtLoHA=="></script>
+
+
+
+    </body>
+</html>

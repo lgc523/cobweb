@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="lgc523 ">
+<meta name="description" content="Consensus 和 Consistency，前者侧重于集群节点达成一致的过程和算法，后者侧重于节点共识过程最终所有数据状态副本对外表现的数据一致性。 传统分布" />
+<meta name="keywords" content=", distributed" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://liguangchang.cn/posts/distributed/distributed-consensus/" />
+
+
+    <title>
+        
+            Consensus、Consistency、FLP、CAP、Byzantine、PoW :: 互联网没一个好东西 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.4e5c639214707eff609bb55fe49e183dee42258a73bc90e4cc7b0a84f900798a.css">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Consensus、Consistency、FLP、CAP、Byzantine、PoW">
+<meta itemprop="description" content="Consensus 和 Consistency，前者侧重于集群节点达成一致的过程和算法，后者侧重于节点共识过程最终所有数据状态副本对外表现的数据一致性。 传统分布"><meta itemprop="datePublished" content="2021-10-16T23:36:46+08:00" />
+<meta itemprop="dateModified" content="2021-10-16T23:36:46+08:00" />
+<meta itemprop="wordCount" content="4394">
+<meta itemprop="keywords" content="distributed," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Consensus、Consistency、FLP、CAP、Byzantine、PoW"/>
+<meta name="twitter:description" content="Consensus 和 Consistency，前者侧重于集群节点达成一致的过程和算法，后者侧重于节点共识过程最终所有数据状态副本对外表现的数据一致性。 传统分布"/>
+
+
+
+
+    <meta property="og:title" content="Consensus、Consistency、FLP、CAP、Byzantine、PoW" />
+<meta property="og:description" content="Consensus 和 Consistency，前者侧重于集群节点达成一致的过程和算法，后者侧重于节点共识过程最终所有数据状态副本对外表现的数据一致性。 传统分布" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://liguangchang.cn/posts/distributed/distributed-consensus/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-10-16T23:36:46+08:00" />
+<meta property="article:modified_time" content="2021-10-16T23:36:46+08:00" /><meta property="og:site_name" content="互联网没一个好东西" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2021-10-16 23:36:46 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ 无需执妄为真 则自在无碍</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#1b1c1d;
+                   animation-duration:5s;">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">|</a></li><li><a href="/posts">post</a></li><li><a href="/about">about</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+                <span class="theme-toggle not-selectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+   <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+   3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+   13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+ </svg></span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        9 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://liguangchang.cn/posts/distributed/distributed-consensus/">Consensus、Consistency、FLP、CAP、Byzantine、PoW</a>
+      </h1>
+
+      
+
+      
+        <hr />
+        <aside id="toc">
+          <div class="toc-title">Table of Contents</div>
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#网络模型">网络模型</a></li>
+    <li><a href="#故障模型">故障模型</a>
+      <ul>
+        <li><a href="#拜占庭故障">拜占庭故障</a></li>
+        <li><a href="#时序故障">时序故障</a></li>
+        <li><a href="#崩溃故障">崩溃故障</a></li>
+        <li><a href="#遗漏故障">遗漏故障</a></li>
+      </ul>
+    </li>
+    <li><a href="#flp">FLP</a></li>
+    <li><a href="#cap">CAP</a></li>
+    <li><a href="#区块链中记账共识算法">区块链中记账共识算法</a></li>
+    <li><a href="#pow">PoW</a>
+      <ul>
+        <li><a href="#记账过程">记账过程</a></li>
+      </ul>
+    </li>
+    <li><a href="#pos">PoS</a></li>
+    <li><a href="#dpos">DPoS</a></li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+</nav>
+        </aside>
+        <hr />
+
+      
+
+      <div class="post-content">
+        <p>Consensus 和 Consistency，前者侧重于集群节点达成一致的过程和算法，后者侧重于节点共识过程最终所有数据状态副本对外表现的数据一致性。</p>
+<p>传统分布式一致性不考虑拜占庭容错问题，假设不存在拜占庭节点。</p>
+<p>区块链系统的共识算法更倾向于运行在更为复杂、开放和缺乏信任的网络环境中，节点数量更多，就有可能存在恶意拜占庭节点。</p>
+<p>分布式共识就是在多个节点均可独自操作或记录的情况下，使得所有节点针对某个状态达成一致的过程。</p>
+<h2 id="网络模型">网络模型</h2>
+<ul>
+<li>
+<p>同步网络</p>
+<p>Synchronous Network，进程执行的每一步的时间都有明确的上下限，每一条消息在网络中传输的时间都有上限，同时每个进程的本地时钟与实际时间的漂移率在已知范围内。分布式系统中，基于这三个条件就可以根据超时机制来检测进程的非拜占庭故障，简化分布式系统的设计。</p>
+</li>
+<li>
+<p>异步网络</p>
+<p>Asynchornous Network，对进程的执行速度、消息在网络中的传输时间和时钟漂移率都没有限制。有些故障很难判断和解决，日常使用的互联网就是典型的异步网络模型，大多数区块链共识算法都是基于同步网络模型，实际运行网络环境中一般都是异步网络模型。</p>
+</li>
+<li>
+<p>半异步网络</p>
+<p>Partially Synchronous，假设在一段网络扰动后，网络最终会回归到同步状态上，更符合实际的网络场景。</p>
+</li>
+</ul>
+<h2 id="故障模型">故障模型</h2>
+<p>分布式系统中的故障一般发生在节点计算和通信链路上。</p>
+<h3 id="拜占庭故障">拜占庭故障</h3>
+<p>Byzantine Failure，或者随机故障，节点可以任意地、错误地甚至恶意地执行任何动作</p>
+<h3 id="时序故障">时序故障</h3>
+<p>Timing Failure 程序可以按照逻辑执行，并且可以正常地响应请求，但是不能保证在指定的时间内响应。</p>
+<ul>
+<li>
+<p>信道故障</p>
+<p>消息在信道传输过程中超出了规定的延迟范围</p>
+</li>
+<li>
+<p>性能问题</p>
+<p>虽然可以正常执行完成任务，由于性能问题导致执行时间过长，超过了预期的范围。</p>
+</li>
+<li>
+<p>本地时钟</p>
+<p>本地始终超过了实际的时钟漂移率范围</p>
+</li>
+</ul>
+<h3 id="崩溃故障">崩溃故障</h3>
+<p>Crash Failure，当故障发生时必须停止响应和发送消息，不会恢复。</p>
+<h3 id="遗漏故障">遗漏故障</h3>
+<p>Omission Failure，节点或者信道未能执行本来应该执行的动作，崩溃时，必须保证一些动作记录下来，当崩溃恢复时，就继续执行因为崩溃未执行的动作。</p>
+<h2 id="flp">FLP</h2>
+<p>1958年，Fischer、Lynch、Patterson 发表了 FLP定理，并获得了Dijkstra 奖。</p>
+<p><a href="http://m.8684.cn/today_y1958">1958年，地球发生了什么</a></p>
+<p>FLP 表示 <strong>在含有多个确定性的异步系统中，只要有一个进程可能发生故障，那么就不存在协议可以保证在有限时间内所有的进程一致</strong>。</p>
+<p>异步系统的假设是FLP定理的关键，假设进程是完全异步的，无法获得任何进程处理速度或消息传输延迟的信息，进程也不能使用同步时钟，因此无法使用基于超时的算法。FLP还假设进程无法判断其他进程是处于完全停止状态还是处于缓慢运行状态。</p>
+<p>也就是一个分布式的异步系统中，每一个 leader 都会从提议者处收集提案，当收集到全部提议者发出的提案后就可以达成一致。当没有故障节点时是可行的，只是达成共识的速度会收到最慢节点网络链接的影响。</p>
+<p>当提案者中发生了故障或者崩溃，leader 不会知道，更不会知道需要等待多长时间才可以收集到全部的提案，即使重试也无法得知故障节点是否可以恢复，只能死等，导致整个体系无法达成共识。</p>
+<h2 id="cap">CAP</h2>
+<p>2000年加州大学柏可莱分校的计算机科学家埃里克·布鲁尔在分布式计算原理研讨会(PODC)提出了一个猜想，2002年，麻省理工学院的塞斯·吉尔伯特和南希·林奇发表了布鲁尔猜想的证明，使之成为CAP定理。</p>
+<p>CAP定理指出对于一个分布式系统来说，不可能同时满足三个特点，一致性(Consistency)、可用性(Availability)、分区容错性(Partition tolerance)，理论上只能同时满足两个。</p>
+<ul>
+<li>
+<p>Consistency</p>
+<p>强一致性，分布式系统中的状态在某一时刻必须保持一致。</p>
+</li>
+<li>
+<p>Availability</p>
+<p>当集群中部分节点出现故障时，集群仍然可以处理客户端的请求，所有的读写请求都会在一个有限的时间内得到响应。</p>
+</li>
+<li>
+<p>Partition tolerance</p>
+<p>网络出现分区，不同分区的集群节点之间无法相互通行的时候，被分隔的节点仍然能够对外提供服务。</p>
+</li>
+</ul>
+<p><strong>如果同时满足一致性和可用性，网络不能出现分区。如果同时满足可用性和分区容错性，不通分区的网络同时对外提供服务就可能导致状态不一致，如果同时满足一致性和分区容错性，不同分区的网络为了实现状态的一致就必须要等待从而导致不能满足可用性。</strong></p>
+<p>工程实践中强一致性几乎是不可能实现的，一般放宽到弱一致性，当用户读到某一操作时，系统特定数据的更新需要一段时间。</p>
+<p>区块链系统的最终一致性是弱一致性的表现，绝大多数公有链通常牺牲一致性来同时满足最终一致性、可用性和分区容错性。在某一个时间节点，区块链可能出现分叉，每一个分叉各自独立维护一个交易集合，随着时间推移，总会有一个分支获得越来越多的认可，最后会达到最终一致性，一些联盟链会牺牲可用性来满足强一致性和分区容错性。</p>
+<h2 id="区块链中记账共识算法">区块链中记账共识算法</h2>
+<p>超级账本采用过 PBFT达成共识，PBFT在少数节点的交易量和吞吐量都比较高，节点数多的话，彼此之间交流信息会长生大量能耗，性能会大幅下降。</p>
+<p>分布式系统中，运行环境和拜占庭将军的环境类似，<strong>共识算法的核心是在正常的节点间形成对网络形态的共识</strong>。Raft 对于参与节点比较宽容，无法容忍拜占庭节点，<strong>为了保证Raft算法能够正常进行，一般需要一种带许可证的网络，对每一个参与者发放证书</strong>。</p>
+<p><strong>不同的算法保证了在不同场景下节点可以达成一致，共识是一种手段，是集群内部达成一致性的保证过程，一致性是内部达成共识对外的一种表现</strong>，好比一个银行账户在相同的银行的不同网点看到的余额一致。</p>
+<p>挖矿虽然在客观上会创造新的比特币，最终目的并不是创造比特币，<strong>只是作为一种激励手段来支撑去中心化的清算机制</strong>，通过挖矿这种方式将去中心化的安全机制与参与者的利益相统一。</p>
+<p>挖矿简单来说就是找到一个随机数(nonse)参与hash运算，使得最后得到的区块hash值符合难度要求 Hash(Block Header) &lt;= target。</p>
+<p>比特币系统采用的哈希算法是 SHA256 算法，最后会产生256Bit的输出，一共有2^256种可能的取值，找到符合难度要求的hash值用多次穷举nonse计算，同时区块头不是单一的字段，而是多个字段拼接而来的。</p>
+<p>比特币的供应是通过挖矿创造的，为了模拟这个过程，产生的比特币数量设计为逐步递减的，大约每四年(每210000块)产生一个新区块，获得的比特币数量将减少一半,2140年后将不会再产生新的比特币。</p>
+<h2 id="pow">PoW</h2>
+<p>Proof-of-Work，工作量证明，一份用来确认系统做过一定量的工作的证明，以每个节点的算力还竞争记账权。（比特币采用）</p>
+<p>区块链参与者（矿工）要在区块链中添加一笔交易，必须解决某种复杂但是无用的计算问题。确保矿工花费了一些资源完成工作，并且不会损害区块链系统，损害系统会导致矿工投入的资源也会有损失，解决问题仅在于完整证明。</p>
+<p>当矿工想要打包交易决定记账权时必须消耗一定的资源，来提高门槛确保记账权确实被想要打包区块的矿工获得，获得记账权需要消耗大量的资源，其他节点很容易验证这个过程，利用了 PoW算法中的资源消耗的不对称性。</p>
+<p>网络中的任何区块都可以试图创建区块，只有在满足以下条件时创建的区块才会被其他节点认可和接受</p>
+<ul>
+<li>
+<p>区块中包含的交易都是合法的</p>
+<p>节点只需要将每笔交易都验证一遍，丢弃掉不合法的交易即可</p>
+</li>
+<li>
+<p>区块hash值要小于或等于一个目标值(争夺记账权)</p>
+<p>需要算力争取。</p>
+</li>
+</ul>
+<p>假设每个节点会划分多个区块用于记录用户交易，PoW 算法获取记账权的原理是，利用区块的 index，前一个区块的哈希值、交易的时间戳、区块数据和 nonce 值，通过SHA256哈希算法计算出一个哈希值，并判断前k个值是否都为 0。如果不是，则递增 nonce 重新计算，如果是，本次计算的hash值为要解决的题目的正确答案，谁先算出答案，谁就获得这个区块的。</p>
+<p>K为哈希值的前导零的个数，标记了计算的难度，0越多难度越大。</p>
+<h3 id="记账过程">记账过程</h3>
+<p>客户端产生了一个新的交易，基于PoW记账过程</p>
+<ul>
+<li>客户端产生新交易，向全网广播，要求对交易进行记账</li>
+<li>每个记账节点接收到请求后，将收到的交易信息放入一个区块中</li>
+<li>每个节点通过PoW算法，计算本节点的区块的hash值，尝试找到一个具有足够工作量难度的工作量证明</li>
+<li>若有节点找到了一个工作量证明向全网广播（区块中所有交易都是有效且之前未存在过的,其他节点才会认同该区块的有效性)</li>
+<li>其他节点收到广播消息后，若验证该区块有效，接受该区块，并跟随在该区块的末尾，制造新区块延长该链条，将被接受的区块的随机hash值视为新区块的随机hash值。</li>
+</ul>
+<p><strong>Pow 的容错机制，允许全网50%的节点出错，要破坏系统需要投入大量节点同时获得记账权，冲突多，会增加达成共识的时间。</strong></p>
+<p><strong>Pow 每次达成共识需要全网共同参与运算，增加了每个节点的计算量，如果题目过难，会导致计算时间长，资源消耗多，如果题目过于简单，会导致大量节点同时获得记账权，冲突多，这些问题都会导致达成共识的时间。</strong></p>
+<h2 id="pos">PoS</h2>
+<p><strong>为了解决 PoW 算法的问题，引入了PoS 算法，由系统权益代替算力来决定区块记账权，拥有的权益越大获得记账权的概率就越大。（以太坊）</strong></p>
+<p>权益就是每个节点占有货币的数量和时间，货币就是节点所获得的奖励，鼓励利滚利。</p>
+<p>PoS之处在于节点计算获取记账权的方法不一样，PoS是根据节点拥有的股权或权益进行计算。</p>
+<p><strong>PoS算法中，节点计算自己的记账权时，通过计算自己的股权或权益来评估，如果发现自己权益最大，则将自己的区块广播给其他节点(保证该区块的有效性)，减少了大部分节点的计算消耗。</strong></p>
+<p><strong>PoS 将算力竞争转变为权益竞争，减少了资源消耗，不需要在每个区块中创建新的货币来激励记账者参与当前玩够哦的运行，在一定程度上缩短了共识达成的时间，以太坊每秒大概能处理30笔交易，持币多的人越来越多，容易出现垄断</strong>。</p>
+<h2 id="dpos">DPoS</h2>
+<p>DPoS 类似于股份制公司的董事会制度，普通股民虽然拥有股权，但进不了董事会，可以投票选举代表(受托人)代他们做决策。</p>
+<p>DPoS是由被社区选举的可信账户(得票较多的受托人)来拥有记账权。</p>
+<p>成为受托人需要去社区拉票获得足够多的信任，用户根据自己持币数量占比来投票，类似公司股票机制。根据自己的权益，投票选出可代表自己的受托节点，受托节点之间竞争记账权。</p>
+<p>通常会选出 k(比如 101) 个受托节点，权利完全相等。受托节点之间争取记账权<strong>也是根据算力进行竞争</strong>的。只要受托节点提供的算力不稳定、宕机或者有恶意行为，随时可以被持有货币的普通节点投票踢出系统，后备的受托节点可以随时顶上去。（高级）</p>
+<p>DPoS 受托人的优点</p>
+<ul>
+<li>
+<p>能耗低、交易更快</p>
+<p>由投票选出的若干信誉度更高的受托人记账，解决了所有节点均参与竞争导致消息量大、达成一致的周期长的问题</p>
+</li>
+<li>
+<p>每隔一定周期调整受托人，避免受托人造假和独权</p>
+</li>
+</ul>
+<p>DPoS 大多数持币通过受托人参与投票，投票的积极性不高，一旦出现故障，无法及时做出应对，导致安全隐患。？提前准备节点planB，类似主备不行吗。</p>
+<h2 id="总结">总结</h2>
+<ul>
+<li>PoW 算力工作量证明争夺记账权，需要全部节点参与计算，共识时间长，算力消耗浪费资源 （比特币）</li>
+<li>PoS 系统权益代替算力决定区块记账权，节能，容易形成垄断</li>
+<li>DPoS 委托权益证明算法，持币人投票选举作为代表通过算力竞争记账权，持币人可以投票随时踢出受托人，不够高可用</li>
+</ul>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://liguangchang.cn/tags/distributed/">distributed</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        4394 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2021-10-16 23:36
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+    <div class="pagination">
+        
+        <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+        </div>
+        
+
+        <div class="pagination__buttons">
+            
+            <span class="button previous">
+                <a href="https://liguangchang.cn/posts/distributed/distributed-transaction/">
+                    <span class="button__icon">←</span>
+                    <span class="button__text">Transaction-2PC,3PC,BASE</span>
+                </a>
+            </span>
+            
+
+            
+            <span class="button next">
+                <a href="https://liguangchang.cn/posts/distributed/distributed-pbft/">
+                    <span class="button__text">Byzantine、PBFT</span>
+                    <span class="button__icon">→</span>
+                </a>
+            </span>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            
+            
+            
+            
+            <span>Powered by Hugo · hello-friend-ng</span>
+        </div>
+    </div>
+    
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span> &#183; <a href="https://beian.miit.gov.cn">京ICP备2020035531号-2</a> &#183; <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41012202000328" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"></span>
+        </div>
+    </div>
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2d3d449fc0ff117f00ac91342a8f76cd5b710411d7a0254dbe75da3234d2f685d6a0c44cff60c414e90b6a149da8e4032c713c25e4e6838e2e3918dc0ad2e81c.js" integrity="sha512-LT1En8D/EX8ArJE0Ko92zVtxBBHXoCVNvnXaMjTS9oXWoMRM/2DEFOkLahSdqOQDLHE8JeTmg44uORjcCtLoHA=="></script>
+
+
+
+    </body>
+</html>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>go on 互联网没一个好东西</title>
+    <link>https://liguangchang.cn/tags/go/</link>
+    <description>Recent content in go on 互联网没一个好东西</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 14 Feb 2022 08:27:01 +0800</lastBuildDate><atom:link href="https://liguangchang.cn/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go Tools</title>
+      <link>https://liguangchang.cn/posts/go/go-tools/</link>
+      <pubDate>Mon, 14 Feb 2022 08:27:01 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/go/go-tools/</guid>
+      <description>go tool nm go tool compile -l -p main main.go -&amp;gt; OBJ go tool nm main.o 方法列表 package main import &amp;#34;fmt&amp;#34; type People struct { } func (p *People) ShowA() { fmt.Println(&amp;#34;showA&amp;#34;) p.ShowB() } func (p *People) ShowB() { fmt.Println(&amp;#34;ShowB&amp;#34;) } type Teacher struct { People } func (t *Teacher) ShowB() { fmt.Println(&amp;#34;teacher showB&amp;#34;) } func main() { t := Teacher{} t.ShowA() } package main type A</description>
+    </item>
+    
+    <item>
+      <title>Go Map</title>
+      <link>https://liguangchang.cn/posts/go/go-map/</link>
+      <pubDate>Sat, 12 Feb 2022 17:59:16 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/go/go-map/</guid>
+      <description>init </description>
+    </item>
+    
+    <item>
+      <title>Go Slice</title>
+      <link>https://liguangchang.cn/posts/go/go-slice/</link>
+      <pubDate>Wed, 09 Feb 2022 13:22:09 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/go/go-slice/</guid>
+      <description>init var s []int **nil 不需要内存分配 ** s := []int{} 空 slice s := []int{5} s := make([]int , 2 , 3) from slice/arr [) s := *new([]int ) type slice struct { array unsafe.Pointer len int cap int } https://asciiflow.com/#/share/eJy9kUEOgjAQRa8ymTULqSJIwkmoi4Z0YYLEIAsI4RbGhcdwzWm8gFfwCwqoaEATm%2F%2BSGTL9%2FS05R2qt2eVtuAo0GxyqTMfoc8mpZHfhCENyhko4FqpEpwkaydRZKo5VRufy4JFvTparKJEygrozlT%2B5Xj3sW669JAr181jvOu3KWhhu6g%2FqN9mXV2qLe57Ku%2Beg7zQ6HpoJMIEAUzADFpgDGzhg0Xjf3%2FpN1D%2Ff4eWpT%2Ftjp7xFxk8mj0Q7%2Frqt%2FfBzggGXo0BtkMh6SDRK2AKPgUElF1xcAC4tva4%3D) 扩容 扩容只关心容量，会把原 slice 的数据拷贝到新 silce 中</description>
+    </item>
+    
+    <item>
+      <title>Go Chan</title>
+      <link>https://liguangchang.cn/posts/go/go-chan/</link>
+      <pubDate>Wed, 09 Feb 2022 13:22:06 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/go/go-chan/</guid>
+      <description>FIFO ，数据总是按照写入的顺序流出管道。 声明和初始化 var ch chan int ch := make(chan int) ch := make(chan int, 1) 管道操作 操作符 &amp;lt;- , -&amp;gt; 表示数据流向，默认双向可读写，在函数间传递时可</description>
+    </item>
+    
+    <item>
+      <title>Go Design Philosophy</title>
+      <link>https://liguangchang.cn/posts/go/go-design-philosophy/</link>
+      <pubDate>Tue, 08 Feb 2022 23:48:26 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/go/go-design-philosophy/</guid>
+      <description>Go history、philosophy。</description>
+    </item>
+    
+    <item>
+      <title>Prometheus</title>
+      <link>https://liguangchang.cn/posts/go/prometheus/</link>
+      <pubDate>Sat, 21 Aug 2021 11:26:29 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/go/prometheus/</guid>
+      <description>Prometheus 由 SoundCloud 用Go语言编写并开源的监控告警系统，自带时序数据库，采用 Pull 方式获取监控信息，提供了多维度的数据模型和灵活的查询接口。 不仅可以通过静态文</description>
+    </item>
+    
+    <item>
+      <title>Golang Programming Language</title>
+      <link>https://liguangchang.cn/posts/go/go-basic/</link>
+      <pubDate>Wed, 11 Aug 2021 01:17:20 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/go/go-basic/</guid>
+      <description>package main import ( &amp;#34;fmt&amp;#34; &amp;#34;image&amp;#34; &amp;#34;image/color&amp;#34; &amp;#34;image/gif&amp;#34; &amp;#34;io&amp;#34; &amp;#34;log&amp;#34; &amp;#34;math&amp;#34; &amp;#34;math/rand&amp;#34; &amp;#34;net/http&amp;#34; &amp;#34;sync&amp;#34; ) var mu sync.Mutex var count int func main() { http.HandleFunc(&amp;#34;/&amp;#34;, handler) http.HandleFunc(&amp;#34;/count&amp;#34;, counter) http.HandleFunc(&amp;#34;/lsr&amp;#34;, func(w http.ResponseWriter, r *http.Request) { //handler(w,r) lissajous(w) }) log.Fatal(http.ListenAndServe(&amp;#34;localhost:8000&amp;#34;, nil)) } func handler(w http.ResponseWriter, r *http.Request) { fmt.Fprintf(w, &amp;#34;%s\t\t%s\t%s\n&amp;#34;, r.Method, r.URL, r.Proto) for k, v := range r.Header { fmt.Fprintf(w, &amp;#34;Header[%q]=%q\n&amp;#34;, k, v) } fmt.Fprintf(w, &amp;#34;Host = %q\n&amp;#34;, r.Host) fmt.Fprintf(w, &amp;#34;RemoteAddr</description>
+    </item>
+    
+  </channel>
+</rss>

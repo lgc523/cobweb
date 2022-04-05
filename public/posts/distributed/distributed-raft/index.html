@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="lgc523 ">
+<meta name="description" content="历史 Raft 算法是 2013 年由斯坦福大学的 Diego Ongaro 和 John Ousterhout 提出的一种适用于非拜占庭容错环境下的分布式一致性算法，用于替代复杂的 Paxos 算法，安全性更高。 Raft 算法能在为" />
+<meta name="keywords" content=", distributed" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://liguangchang.cn/posts/distributed/distributed-raft/" />
+
+
+    <title>
+        
+            The Raft Consensus Algorithm :: 互联网没一个好东西 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.4e5c639214707eff609bb55fe49e183dee42258a73bc90e4cc7b0a84f900798a.css">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="The Raft Consensus Algorithm">
+<meta itemprop="description" content="历史 Raft 算法是 2013 年由斯坦福大学的 Diego Ongaro 和 John Ousterhout 提出的一种适用于非拜占庭容错环境下的分布式一致性算法，用于替代复杂的 Paxos 算法，安全性更高。 Raft 算法能在为"><meta itemprop="datePublished" content="2021-10-15T00:39:41+08:00" />
+<meta itemprop="dateModified" content="2021-10-15T00:39:41+08:00" />
+<meta itemprop="wordCount" content="4710">
+<meta itemprop="keywords" content="distributed," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="The Raft Consensus Algorithm"/>
+<meta name="twitter:description" content="历史 Raft 算法是 2013 年由斯坦福大学的 Diego Ongaro 和 John Ousterhout 提出的一种适用于非拜占庭容错环境下的分布式一致性算法，用于替代复杂的 Paxos 算法，安全性更高。 Raft 算法能在为"/>
+
+
+
+
+    <meta property="og:title" content="The Raft Consensus Algorithm" />
+<meta property="og:description" content="历史 Raft 算法是 2013 年由斯坦福大学的 Diego Ongaro 和 John Ousterhout 提出的一种适用于非拜占庭容错环境下的分布式一致性算法，用于替代复杂的 Paxos 算法，安全性更高。 Raft 算法能在为" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://liguangchang.cn/posts/distributed/distributed-raft/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-10-15T00:39:41+08:00" />
+<meta property="article:modified_time" content="2021-10-15T00:39:41+08:00" /><meta property="og:site_name" content="互联网没一个好东西" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2021-10-15 00:39:41 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ 无需执妄为真 则自在无碍</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#1b1c1d;
+                   animation-duration:5s;">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">|</a></li><li><a href="/posts">post</a></li><li><a href="/about">about</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+                <span class="theme-toggle not-selectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+   <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+   3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+   13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+ </svg></span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        10 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://liguangchang.cn/posts/distributed/distributed-raft/">The Raft Consensus Algorithm</a>
+      </h1>
+
+      
+
+      
+        <hr />
+        <aside id="toc">
+          <div class="toc-title">Table of Contents</div>
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#历史">历史</a></li>
+    <li><a href="#复制状态机">复制状态机</a></li>
+    <li><a href="#算法流程">算法流程</a></li>
+    <li><a href="#leader选举">Leader选举</a></li>
+    <li><a href="#candidate-成为leader-的要素">Candidate 成为leader 的要素</a></li>
+    <li><a href="#选举流程">选举流程</a></li>
+    <li><a href="#日志复制">日志复制</a></li>
+    <li><a href="#brain-split">Brain Split</a></li>
+    <li><a href="#可用性的时间要求">可用性的时间要求</a></li>
+    <li><a href="#自动变更配置">自动变更配置</a></li>
+    <li><a href="#配置变更流程">配置变更流程</a>
+      <ul>
+        <li><a href="#配置变更过程中异常情况">配置变更过程中异常情况</a></li>
+      </ul>
+    </li>
+    <li><a href="#日志压缩">日志压缩</a></li>
+    <li><a href="#节点异常">节点异常</a></li>
+  </ul>
+</nav>
+        </aside>
+        <hr />
+
+      
+
+      <div class="post-content">
+        <h2 id="历史">历史</h2>
+<p>Raft 算法是 2013 年由斯坦福大学的 Diego Ongaro 和  John Ousterhout 提出的一种适用于非拜占庭容错环境下的分布式一致性算法，用于替代复杂的 Paxos 算法，安全性更高。</p>
+<p>Raft 算法能在为集群之间部署有限状态机提供一种通用方法，确保计算机集群内的任意节点在某种状态上保持一致，保证在一组服务器在执行一组操作，最后得到一致的结果。</p>
+<h2 id="复制状态机">复制状态机</h2>
+<p><strong>Repilcated State Machine，RSM</strong></p>
+<p>一致性算法是在复制状态机的背景下提出，一致性算法中，一组服务器的状态机是拥有相同状态的副本，即使部分节点宕机，一组服务器仍然能够继续提供服务。</p>
+<p>分布式系统中，复制状态机被用来解决各种容错问题。</p>
+<p>一般通过复制日志来实现复制状态机，<strong>每个服务器存储者一份包括一系列命令的日志，状态机（State Machine）会按照顺序执行这些命令</strong>。每份日志包含相同的命令，并且顺序相同，每个状态机都会处理相同的命令序列，状态机是确定性的，处理相同的命令，最终会得到相同的结果。</p>
+<p>每个服务器上的<strong>一致性模块（Consensus Module）</strong>,接受来自客户端的命令，把命令添加到自己的日志中，状态机按照顺序处理，并将结果返回给客户端，即使有部分节点故障，命令被正确复制，服务器集群还是整体可靠。</p>
+<h2 id="算法流程">算法流程</h2>
+<ol>
+<li>首先在集群中选择一个领导者负责日志的管理</li>
+<li>领导者从客户端收到请求后会将请求以日志的形式复制给其他跟随者，并且在保证安全的时候通知其他 Follower 执行日志中的命令，将状态应用到各自的状态机中</li>
+<li>Raft 强化了 Leader 的地位，<strong>数据只会从 Leader 流向其他 Follower</strong></li>
+<li>当 Leader 故障，其他节点会重新选举新的 Leader ,然后重复日志同步</li>
+</ol>
+<p>重复的过程被分为三个独立的模块，<strong>领导者选举、日志复制、异常处理</strong></p>
+<h2 id="leader选举">Leader选举</h2>
+<p>Raft 算法中，节点任意时刻只能处于 Leader、Candidate、Follower 其中一种状态，初始化时所有的节点都处于跟随者的状态，Follower 通过心跳信息来感知其他节点。</p>
+<p>通常情况下，集群只有一个Leader ，且其他节点全部都是Follower，Follower 都是被动的，不会发送任何请求，只会简单的响应来自Leader 和 Candidate 的请求，</p>
+<ul>
+<li>
+<p>节点在启动时，都处于 Follower 状态，一段时间内没有收到来自 Leader 的心跳信息，就会从 Follower 转变为候选者，发起选举。如果收到包含自己的多数选票则转变为 Leader。</p>
+</li>
+<li>
+<p>如果发现其他节点比自己更新，则切换到 Follower 状态。<strong>为了确定其他节点比自己更新，Raft 引入了任期 （Term） 的概念。</strong></p>
+</li>
+<li>
+<p>初始化时，Term 为0，当有节点当选 Leader 时，Term 更新为1。</p>
+</li>
+<li>
+<p>新 Leader 选出后，新的 Term 在之前的 Term 基础之上 +1。</p>
+</li>
+<li>
+<p>当节点从 Follower 转变为 Candidate 时，Term 也要 +1。</p>
+</li>
+<li>
+<p><strong>节点间通信会交换当前 Term</strong>，如果一个节点的 Term 比其他节点小，该节点会把自己的任期号更新为较大的。</p>
+</li>
+<li>
+<p>如果 Candidate/Leader 发现自己的 <strong>Term 比其他节点小</strong>，会立刻退回到 Follower 状态。</p>
+</li>
+<li>
+<p>如果一个节点收到<strong>过期的Term会直接拒绝</strong>不进行处理。</p>
+</li>
+</ul>
+<p><strong>Term 在Raft 中起到了逻辑时钟的作用</strong></p>
+<h2 id="candidate-成为leader-的要素">Candidate 成为leader 的要素</h2>
+<ul>
+<li>获取集群多数节点的同意</li>
+<li>不存在比自己 term 高的 candidate</li>
+<li>不存在其他 leader</li>
+</ul>
+<h2 id="选举流程">选举流程</h2>
+<p>Raft 使用心跳机制来触发 leader 选举流程，领导者<strong>周期性地向所有 follower 发送心跳信息</strong>，每个节点只要能收到 leader / candidate 发来的心跳信息就会一直保持 following 状态。</p>
+<p>每个节点本身都有自己的选举超时时间，如果超过这个超时时间没有收到任何消息，就会假设网络中没有 leader，这个时候就会改变自己的状态为  candidate，同时增加自己的 Term，开始竞选 leader。</p>
+<p>每个节点在竞选 leader 时回首先给自己投一票，然后并行向其群中其他节点发送请求投票结果，如果其他节点在这轮选举中没有投过票就会给它投一票，最终得到三种结果，当选成功，当选失败，无法确定leader。</p>
+<ul>
+<li>节点增加自己的 Term ，转换为 candidate</li>
+<li>投自己一票，给其他节点发送自己的投票请求</li>
+<li>等待其他节点回复
+<ul>
+<li>赢得选举，当选 leader</li>
+<li>被告知其他节点当选leader，自己退回follower</li>
+<li>选举超时后没有收到足够多的票，重复选举</li>
+</ul>
+</li>
+</ul>
+<p>连续选举失败，出去系统本身原因，就是算法本身达到了不可恢复的状态。为了跳出这样不可用的状态，<strong>candidate 会随机从固定时间区间中选择一个时间作为选举超时时间</strong>，这个每个节点每次等待选举超时时间都不一样，选举超时时间短的节点会有更大的机会获得更多的选票而当选 leader，就减少了因为选票被瓜分而导致选举失败的可能性。</p>
+<h2 id="日志复制">日志复制</h2>
+<p>leader 负责在任期内的日志复制工作，保证节点一致性。</p>
+<p><strong>日志信息表明了 term 任期的 leader append 的 索引为 index 的 什么类型的日志</strong>。（<strong>todo 看etcd 实</strong>现）</p>
+<p><strong>相同的初始状态 + 相同的输入 = 一致的最终状态</strong></p>
+<p>当客户端请求到集群，如果 follwer 收到，将会把请求转发给 leader，由 leader 统一处理。leader 调度请求，顺序的告知所有 follower 来保证所有的节点状态一致。</p>
+<ul>
+<li>leader 收到请求打包成日志条目</li>
+<li>leader 并行发送日志条目到集群所有节点</li>
+<li>leader 收到大多数 follower 收到条目的回复</li>
+<li>leader 应用日志条目里面的命令到自己的状态机中(执行命令)</li>
+<li>leader 回复 follower ,并让他们执行日志中的命令，达到和自己一致的状态</li>
+<li>Log match ，follower 收到消息时，会判断term、index 保证append 顺序一致</li>
+</ul>
+<p>每个日志条目中，除了要执行的命令还包括 leader 的 term，用于处理异常情况。当日志被复制到大多数节点时，系统即可向客户端返回成功的消息，一旦系统返回了结果，就必须保证系统在任何异常情况都不会发送回滚消息。</p>
+<h2 id="brain-split">Brain Split</h2>
+<p>在一个任期内最多有一个 leader 被选出，有多余的 leader 被选出成为脑裂(Brain Split)。</p>
+<p>同一时刻，集群内有多个 leader ,旧的 leader 在一段时间内可能不会知道新的 leader 已经被选举出来，旧的 leader 可能会读取处陈旧的数据，如果客户端进行写操作，可能会出现数据的覆盖或者丢失。</p>
+<p>Raft 通过两点保证不会出现脑裂</p>
+<ul>
+<li><strong>一个节点在某一个任期内最多只能投一票</strong></li>
+<li><strong>只有获得大多数投票才能成为 leader</strong></li>
+</ul>
+<p>这样保证了同一时间内只有一个 leader，当一个节点崩溃了一段时间后，他的状态已经落后其他节点很多，突然恢复被选举为 leader，这个时候，客户端发来的请求经过复制就会出现集群状态机状态不一致的情况。</p>
+<p>其他共识算法会同步落后的日志给 leader，在复制到其他节点，raft 设计者认为这样会增加算法的复杂性，直接放弃了这种方法，<strong>采用拒绝投票给日志没有自己新的节点的方法</strong>，这样<strong>保证了状态比大多数节点落后的节点不会当选 leader</strong>。</p>
+<p>比较日志中的<strong>最后一个日志条目的索引值和任期号</strong>，定义谁的日志新。term 大的当选，term 一样，索引值大的日志新。</p>
+<h2 id="可用性的时间要求">可用性的时间要求</h2>
+<p>Raft 时间的要求</p>
+<ul>
+<li>服务器故障时间必须比消息交换的时间长，否则每当一个节点要收集足够多选票的时候宕机了，新一轮的投票会重复这个过程，导致无法在有限的时间内选出领导者，</li>
+<li>广播的时间必须小于选举超时时间一个数量级，这样领导者才能发送稳定的心跳消息阻止跟随者进入候选者状态。</li>
+<li>当 leader 崩溃后，整个系统在选举超时时间中不可用，所以平均故障间隔时间要大于选举超时时间几个数量级，这样系统的可用性才比较高</li>
+</ul>
+<p><strong>一般，广播时间 10ms，选举时间超时时间 300ms，服务器平均故障时间大于1个月。</strong></p>
+<h2 id="自动变更配置">自动变更配置</h2>
+<p>硬件故障，集群负载发生了变化，需要集群中的节点数量动态地增加/减少。</p>
+<p>从旧配置直接变更到新配置的各种方法都是不安全的，很容易出现脑裂。</p>
+<p><strong>获取半数以上的投票在旧的配置和新配置之间投票数肯定是不同的，必然有一个时刻，可同时满足新、旧节点的选举要求，就会出现脑裂情况。</strong></p>
+<p>raft 采用了<strong>两阶段提交</strong>来保证安全的变更日志。</p>
+<h2 id="配置变更流程">配置变更流程</h2>
+<ol>
+<li>当leader 收到一个改变配置从 c_old 到 c_new 的请求时，首先会合并新旧配置 merge(c_old，c_new)，并且保存到自己的日志条目中，然后复制到集群中的其他节点，c_new 提交之前，<strong>所有节点的决定都会基于 merge(c_old，c_new) 的配置做决定。</strong></li>
+<li>在 merge(c_old，c_new) 被提交之后，leader 创建一条 c_new 的配置复制到集群，c_new 被提交之后，旧配置指定的节点就变得无关紧要，在集群中不可见后就可以直接从集群中移除。</li>
+</ol>
+<h3 id="配置变更过程中异常情况">配置变更过程中异常情况</h3>
+<ul>
+<li>
+<p><strong>节点宕机</strong></p>
+<p>如果leader 在复制包含配置文件的日志时候崩溃，follower 的配置状态处于 merge(c_old，c_new)  /  c_old，无论什么状态，c_new 都不会单方面作出决定。<strong>Leader Completeness</strong>属性保证了只有拥有 merge(c_old，c_new) 日志的节点可以被选为 leader。</p>
+</li>
+<li>
+<p><strong>空白节点加入</strong></p>
+<p>新节点本省没有日志存储，是无法提交集群中的任何一个日志的，需要一段时间来追赶。为了避免这种可用时间间隔太长的问题，采取了<strong>节点静默加入集群的方法，节点加入集群后没有投票权，只能同步日志，当心节点已经可以跟上集群日志的时候在投票加入集群</strong></p>
+</li>
+<li>
+<p><strong>旧节点干扰</strong></p>
+<p>c_new 被提交后，就需要移除不在c_new 中的节点，<strong>节点被移除后就接受不到 leader 的心跳消息</strong>，这个时候这些节点认为 leader 可能出现了故障就发起选举，正常执行的 leader 收到投票请求后就会退回到 followering 等待新领导者被选出，虽然最终选出了正确的 leader，但是频繁选举会扰乱集群的可用性。</p>
+<p>raft 采用了<strong>最小选举超时时间的机制</strong>，当服务器在当前最小的选举超时时间内收到一个请求投票的请求时，不会更新当前的任期号或投出选票，这样就避免了频繁的状态切换。</p>
+</li>
+<li>
+<p><strong>领导者不在集群内</strong> (fixme 不清楚为什么会leader不在新集群中，强行故障?)</p>
+<p>如果leader不在新的集群中，当配置文件从 merge(c_old，c_new) 变更到 c_new 时，leader 不在 c_new 时，这个时候就会在<strong>一段时间内发生旧节点管理新集群</strong>的情况。</p>
+<p><strong>Raft 在提交 c_new 成功时，leader 的状态变为 followering 就能让领导者在新集群中产生了，触发选主，当然还是要获得半数投票，但是不一定切主。666</strong></p>
+</li>
+</ul>
+<h2 id="日志压缩">日志压缩</h2>
+<p>Raft 运行过程中，日志会不断累积，raft <strong>采用快照的方法来压缩日志</strong>，快照时间点的日志全部丢弃，nb，我以为会是lsm 引擎的多层次方式。</p>
+<p>每个服务器根据已经提交的日志，会独立创建快照，快照包含</p>
+<ul>
+<li>状态机最后应用的日志</li>
+<li>状态机最后应用日志的Term号</li>
+<li>状态机最后应用的配置文件内容</li>
+</ul>
+<p>Leader 周期性的发送一些快照给 follower,如果与 leader 保持同步的 follower 已经提交了快照的内容，会<strong>直接丢弃收到的快照</strong>，运行缓慢或新加入的节点不会有这些内容，就会接受并应用到自己的状态机中。</p>
+<h2 id="节点异常">节点异常</h2>
+<ul>
+<li>
+<p><strong>Leader 不可用</strong></p>
+<ol>
+<li>leader 和 follower 之间的 heartbeat 异常，导致 follower 发生 election timeout 时</li>
+<li>follower 状态变成 candidate ，向其他 follower 发起投票</li>
+<li>获得半数投票后，作为新的 leader，步进数 + 1，向follower同步 日志</li>
+<li>如果之前的 leader 再次加入集群，两个 leader 比较步进数，步进数低的 leader 将切换自己的状态为 follower</li>
+<li>较早之前的leader 中的不一致日志将被清除，并与现在的 leader 中的日志保持一致</li>
+</ol>
+</li>
+<li>
+<p><strong>Follower 不可用</strong></p>
+<p>集群中的日志内容始终是从 leader 节点同步的，只要这一个节点再次加入集群时重新从 leader 节点处复制日志即可</p>
+<ol>
+<li>Follower 节点异常，不再同步日志以及接收 heartbeat</li>
+<li>Follower 节点恢复，重新加入集群，日志接收同步现有的 leader</li>
+</ol>
+</li>
+<li>
+<p><strong>多个 Candidate / Leader</strong></p>
+<p>通常是由于数据传输不畅导致，多个 leader 发生在节点隔离，多个 candidate 出现在未选出 leader 的启动初期</p>
+<ol>
+<li>初始状态，所有的节点都处于 follower 状态</li>
+<li>两个节点同时成为 candidate 发起选举，但是都得到了少部分 follower 的接收投票，继续向其他 follower 询问</li>
+<li>投过一轮的 follower 会拒绝 candidate 的询问</li>
+<li>candidate 也会询问其他 candidate，步进数相同的情况下，candidat 会拒绝其他candidate 的请求</li>
+<li>第一轮未选出 leader ，candidate将随机一个等待间隔 (150ms-300ms) 再次发起投票</li>
+<li>Candidate 得到半数以上的 follower 的接受，candidate 将成为 leader</li>
+<li>其他 candidate 也将再次发起投票，由于已经选出 leader，candidate 将收到拒绝接受的投票</li>
+<li>Candidate 被多数节点拒绝之后，并且已知集群中已经存在 leader 后，candidat 将停止投票询问请求，切换为 follower，从 leader 同步日志</li>
+</ol>
+</li>
+</ul>
+<p><strong>Raft 通过一系列机制保证了在非拜占庭容错环境下正常的工作，即使出现了网络延迟、节点宕机或者选举冲突的情况下，依然可以保证集群的可用性，通过对节点颁发证书也可以保证节点的可信</strong>。</p>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://liguangchang.cn/tags/distributed/">distributed</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        4710 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2021-10-15 00:39
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+    <div class="pagination">
+        
+        <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+        </div>
+        
+
+        <div class="pagination__buttons">
+            
+            <span class="button previous">
+                <a href="https://liguangchang.cn/posts/distributed/distributed-pbft/">
+                    <span class="button__icon">←</span>
+                    <span class="button__text">Byzantine、PBFT</span>
+                </a>
+            </span>
+            
+
+            
+            <span class="button next">
+                <a href="https://liguangchang.cn/posts/distributed/distributed-election/">
+                    <span class="button__text">Distributed leader election</span>
+                    <span class="button__icon">→</span>
+                </a>
+            </span>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            
+            
+            
+            
+            <span>Powered by Hugo · hello-friend-ng</span>
+        </div>
+    </div>
+    
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span> &#183; <a href="https://beian.miit.gov.cn">京ICP备2020035531号-2</a> &#183; <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41012202000328" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"></span>
+        </div>
+    </div>
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2d3d449fc0ff117f00ac91342a8f76cd5b710411d7a0254dbe75da3234d2f685d6a0c44cff60c414e90b6a149da8e4032c713c25e4e6838e2e3918dc0ad2e81c.js" integrity="sha512-LT1En8D/EX8ArJE0Ko92zVtxBBHXoCVNvnXaMjTS9oXWoMRM/2DEFOkLahSdqOQDLHE8JeTmg44uORjcCtLoHA=="></script>
+
+
+
+    </body>
+</html>

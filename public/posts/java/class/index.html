@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="lgc523 ">
+<meta name="description" content="Jvm 的跨平台可以让一份 Class 文件运行在不通的平台上，Class 作为异构语言和 JVM 之间的重要桥梁，可以由源代码被编译成 Class 文件，并最终在 JVM 上执行，Clo" />
+<meta name="keywords" content=", java" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://liguangchang.cn/posts/java/class/" />
+
+
+    <title>
+        
+            Class :: 互联网没一个好东西 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.4e5c639214707eff609bb55fe49e183dee42258a73bc90e4cc7b0a84f900798a.css">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Class">
+<meta itemprop="description" content="Jvm 的跨平台可以让一份 Class 文件运行在不通的平台上，Class 作为异构语言和 JVM 之间的重要桥梁，可以由源代码被编译成 Class 文件，并最终在 JVM 上执行，Clo"><meta itemprop="datePublished" content="2021-12-12T10:21:27+08:00" />
+<meta itemprop="dateModified" content="2021-12-12T10:21:27+08:00" />
+<meta itemprop="wordCount" content="676">
+<meta itemprop="keywords" content="java," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Class"/>
+<meta name="twitter:description" content="Jvm 的跨平台可以让一份 Class 文件运行在不通的平台上，Class 作为异构语言和 JVM 之间的重要桥梁，可以由源代码被编译成 Class 文件，并最终在 JVM 上执行，Clo"/>
+
+
+
+
+    <meta property="og:title" content="Class" />
+<meta property="og:description" content="Jvm 的跨平台可以让一份 Class 文件运行在不通的平台上，Class 作为异构语言和 JVM 之间的重要桥梁，可以由源代码被编译成 Class 文件，并最终在 JVM 上执行，Clo" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://liguangchang.cn/posts/java/class/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-12-12T10:21:27+08:00" />
+<meta property="article:modified_time" content="2021-12-12T10:21:27+08:00" /><meta property="og:site_name" content="互联网没一个好东西" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2021-12-12 10:21:27 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ 无需执妄为真 则自在无碍</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#1b1c1d;
+                   animation-duration:5s;">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">|</a></li><li><a href="/posts">post</a></li><li><a href="/about">about</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+                <span class="theme-toggle not-selectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+   <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+   3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+   13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+ </svg></span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        2 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://liguangchang.cn/posts/java/class/">Class</a>
+      </h1>
+
+      
+
+      
+        <hr />
+        <aside id="toc">
+          <div class="toc-title">Table of Contents</div>
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#class-file">Class File</a>
+      <ul>
+        <li><a href="#magic-number">Magic Number</a></li>
+        <li><a href="#version">Version</a></li>
+        <li><a href="#constant_pool">constant_pool</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </aside>
+        <hr />
+
+      
+
+      <div class="post-content">
+        <p>Jvm 的跨平台可以让一份 Class 文件运行在不通的平台上，Class 作为异构语言和 JVM 之间的重要桥梁，可以由源代码被编译成 Class 文件，并最终在 JVM 上执行，Clojure、Groovy、Scala、Jython等语言都可以活跃在 JVM 平台上。</p>
+<h2 id="class-file">Class File</h2>
+<ul>
+<li>类的属性</li>
+<li>类的方法
+<ul>
+<li>访问标记</li>
+<li>名称</li>
+<li>描述符</li>
+<li>属性
+<ul>
+<li>行号属性</li>
+<li>局部变量表</li>
+<li>栈映射帧</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>类的字段
+<ul>
+<li>访问标记</li>
+<li>名称</li>
+<li>描述符</li>
+<li>属性</li>
+</ul>
+</li>
+<li>实现的接口</li>
+<li>父类</li>
+<li>magic number  Class 文件的特征</li>
+<li>小版本号</li>
+<li>大版本号</li>
+<li>常量池
+<ul>
+<li>各种常量</li>
+<li>整数</li>
+<li>字符串</li>
+<li>Class</li>
+</ul>
+</li>
+<li>访问标记
+<ul>
+<li>public</li>
+<li>static</li>
+</ul>
+</li>
+<li>当前类</li>
+</ul>
+<p>虚拟机规范中，Class 文件使用一种类似于 C 语言结构体的方式描述，统一使用无符号整数作为基本数据类型，u1、u2、u3、u4、u8 分别表示无符号的单字节、2字节、4字节、8字节整数，字符串用 u1 数组表示。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>ClassFile<span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>	u4 magic<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>	u2 minor_version<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>	u2 major_version<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>	u2 constant_pool_count<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>	cp_info constant_pool<span style="color:#f92672">[</span>constant_pool_count<span style="color:#f92672">-</span>1<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>	u2 access_flags<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>	u2 this_class<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>	u2 super_class<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>	u2 interfaces_count<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>	u2 interfaces<span style="color:#f92672">[</span>interfaces_count<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>	u2 fields_count<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>	field_info fields<span style="color:#f92672">[</span>fields_count<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>	u2 methods_count<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>	method_info methods<span style="color:#f92672">[</span>methods_count<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>	u2 attributes_count<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>	attribute_info attributes<span style="color:#f92672">[</span>attributes_count<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h3 id="magic-number">Magic Number</h3>
+<p>魔数作为 Class 文件的标志，告诉虚拟机这个是 Class 文件，4字节无符号整数，固定为 0xCAFEBABE</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Simple</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> TYPE <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> id<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String name<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setId</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> id<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">id</span> <span style="color:#f92672">=</span> id<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IllegalStateException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>e<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">getName</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> name<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setName</span><span style="color:#f92672">(</span>String name<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">name</span> <span style="color:#f92672">=</span> name<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>hexdump 查看 class</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#ae81ff">0000000</span> ca fe ba be <span style="color:#ae81ff">00</span> <span style="color:#ae81ff">00</span> <span style="color:#ae81ff">00</span> 3d <span style="color:#ae81ff">00</span> 2f 0a <span style="color:#ae81ff">00</span> <span style="color:#ae81ff">02</span> <span style="color:#ae81ff">00</span> <span style="color:#ae81ff">03</span> <span style="color:#ae81ff">07</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0000010</span> <span style="color:#ae81ff">00</span> <span style="color:#ae81ff">04</span> 0c <span style="color:#ae81ff">00</span> <span style="color:#ae81ff">05</span> <span style="color:#ae81ff">00</span> <span style="color:#ae81ff">06</span> <span style="color:#ae81ff">01</span> <span style="color:#ae81ff">00</span> <span style="color:#ae81ff">10</span> 6a <span style="color:#ae81ff">61</span> <span style="color:#ae81ff">76</span> <span style="color:#ae81ff">61</span> 2f 6c
+</span></span><span style="display:flex;"><span>......
+</span></span></code></pre></div><h3 id="version">Version</h3>
+<p>魔数后面跟着 小版本号和大版本号（都是2字节）</p>
+<p>十进制转换十六进制</p>
+<p><strong>echo &ldquo;obase=16; 52&rdquo; | bc</strong></p>
+<p><strong>printf &lsquo;%x\n&rsquo; 52</strong></p>
+<table>
+<thead>
+<tr>
+<th>小版本</th>
+<th>大版本</th>
+<th>编译器版本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3</td>
+<td>45</td>
+<td>1.1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>46</td>
+<td>1.2</td>
+</tr>
+<tr>
+<td>0</td>
+<td>47</td>
+<td>1.3</td>
+</tr>
+<tr>
+<td>0</td>
+<td>48</td>
+<td>1.4</td>
+</tr>
+<tr>
+<td>0</td>
+<td>49</td>
+<td>1.5</td>
+</tr>
+<tr>
+<td>0</td>
+<td>50 0x32</td>
+<td>1.6</td>
+</tr>
+<tr>
+<td>0</td>
+<td>51 0x33</td>
+<td>1.7</td>
+</tr>
+<tr>
+<td>0</td>
+<td>52 0x34</td>
+<td>1.8</td>
+</tr>
+<tr>
+<td>0</td>
+<td>53 0x35</td>
+<td>1.9</td>
+</tr>
+<tr>
+<td>0</td>
+<td>54 0x36</td>
+<td>10</td>
+</tr>
+<tr>
+<td>0</td>
+<td>55 0x37</td>
+<td>11</td>
+</tr>
+<tr>
+<td>0</td>
+<td>56 0x38</td>
+<td>12</td>
+</tr>
+<tr>
+<td>0</td>
+<td>57 0x39</td>
+<td>13</td>
+</tr>
+<tr>
+<td>0</td>
+<td>58 0x3a</td>
+<td>14</td>
+</tr>
+<tr>
+<td>0</td>
+<td>59 0x3b</td>
+<td>15</td>
+</tr>
+<tr>
+<td>0</td>
+<td>60 0x3c</td>
+<td>16</td>
+</tr>
+<tr>
+<td>0</td>
+<td>61 0x3d</td>
+<td>17</td>
+</tr>
+</tbody>
+</table>
+<p>Java -target 可以使用指定版本的发行版编译器进行编译。</p>
+<h3 id="constant_pool">constant_pool</h3>
+<p>版本号后面跟着的是常量池的数量和若干个常量池表项，</p>
+<p><code>常量池 0 为空缺页，不存放实际内容，常量池的每一项以类型、长度、内容或者类型、内容的格式依次排列。</code></p>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://liguangchang.cn/tags/java/">java</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        676 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2021-12-12 10:21
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+    <div class="pagination">
+        
+        <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+        </div>
+        
+
+        <div class="pagination__buttons">
+            
+            <span class="button previous">
+                <a href="https://liguangchang.cn/posts/java/class-load/">
+                    <span class="button__icon">←</span>
+                    <span class="button__text">Class load</span>
+                </a>
+            </span>
+            
+
+            
+            <span class="button next">
+                <a href="https://liguangchang.cn/posts/java/java-keyword/">
+                    <span class="button__text">Java-KeyWord</span>
+                    <span class="button__icon">→</span>
+                </a>
+            </span>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            
+            
+            
+            
+            <span>Powered by Hugo · hello-friend-ng</span>
+        </div>
+    </div>
+    
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span> &#183; <a href="https://beian.miit.gov.cn">京ICP备2020035531号-2</a> &#183; <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41012202000328" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"></span>
+        </div>
+    </div>
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2d3d449fc0ff117f00ac91342a8f76cd5b710411d7a0254dbe75da3234d2f685d6a0c44cff60c414e90b6a149da8e4032c713c25e4e6838e2e3918dc0ad2e81c.js" integrity="sha512-LT1En8D/EX8ArJE0Ko92zVtxBBHXoCVNvnXaMjTS9oXWoMRM/2DEFOkLahSdqOQDLHE8JeTmg44uORjcCtLoHA=="></script>
+
+
+
+    </body>
+</html>

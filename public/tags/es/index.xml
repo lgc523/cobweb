@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>es on 互联网没一个好东西</title>
+    <link>https://liguangchang.cn/tags/es/</link>
+    <description>Recent content in es on 互联网没一个好东西</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 30 Jan 2022 20:43:01 +0800</lastBuildDate><atom:link href="https://liguangchang.cn/tags/es/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Elasticsearch: 基本概念</title>
+      <link>https://liguangchang.cn/posts/es/es-basic/</link>
+      <pubDate>Sun, 30 Jan 2022 20:43:01 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/es/es-basic/</guid>
+      <description>version 7.15.x 节点 GET /{indexName}/_search_shards &amp;#34;roles&amp;#34; : [ &amp;#34;data&amp;#34;, &amp;#34;data_cold&amp;#34;, &amp;#34;data_content&amp;#34;, &amp;#34;data_frozen&amp;#34;, &amp;#34;data_hot&amp;#34;, &amp;#34;data_warm&amp;#34;, &amp;#34;ingest&amp;#34;, &amp;#34;master&amp;#34;, &amp;#34;ml&amp;#34;, &amp;#34;remote_cluster_client&amp;#34;, &amp;#34;transform&amp;#34; ] 每个节点启动，默认是 master eligible 节点，可以设置 node.master:false 禁止 master-eligible 节点可以参加选主流程，成为 master 节点 第一个节点启动时候，</description>
+    </item>
+    
+    <item>
+      <title>Elasticsearch 生态，安装</title>
+      <link>https://liguangchang.cn/posts/es/es-install/</link>
+      <pubDate>Mon, 29 Nov 2021 22:25:44 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/es/es-install/</guid>
+      <description>Elasticsearch 7.15.2 安装。 Lucene 基于 Java 语言开发的搜索引擎类库 创建于1999年，2005 年成为 Apache 顶级开源项目 高性能、易拓展 局限性 只能基于 Java 语言开发 类库的接口学习曲</description>
+    </item>
+    
+  </channel>
+</rss>
