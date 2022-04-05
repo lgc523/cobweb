@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>distributed on 互联网没一个好东西</title>
+    <link>https://liguangchang.cn/tags/distributed/</link>
+    <description>Recent content in distributed on 互联网没一个好东西</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Feb 2022 00:04:10 +0800</lastBuildDate><atom:link href="https://liguangchang.cn/tags/distributed/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Metrics、Tracing、 Logging</title>
+      <link>https://liguangchang.cn/posts/distributed/distributed-cornerstone-observability/</link>
+      <pubDate>Thu, 10 Feb 2022 00:04:10 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/distributed/distributed-cornerstone-observability/</guid>
+      <description>分布式的基石 &amp;mdash; 可观测性 可观测性(Observability) 和可控制性(Controllability) 是由匈牙利数学家 Rudolf E·Kålmån 针</description>
+    </item>
+    
+    <item>
+      <title>Consistency Hash</title>
+      <link>https://liguangchang.cn/posts/distributed/consistency-hash/</link>
+      <pubDate>Fri, 07 Jan 2022 13:18:09 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/distributed/consistency-hash/</guid>
+      <description>这几天在看 redis 看了不少哈希，昨天晚上又看之前的分布式的东西，看到分布式高可靠的负载均衡，里面也有哈希来做负载均衡，但是都没有解决有状态的，根据</description>
+    </item>
+    
+    <item>
+      <title>Transaction-2PC,3PC,BASE</title>
+      <link>https://liguangchang.cn/posts/distributed/distributed-transaction/</link>
+      <pubDate>Sun, 17 Oct 2021 23:41:03 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/distributed/distributed-transaction/</guid>
+      <description>事务 Transaction ，一种机制，将包含一系列操作的工作序列纳入到一个不可分隔的执行单元，只有把操作均被正确执行才能提交事务，任意一个操作失败都会导致整个事</description>
+    </item>
+    
+    <item>
+      <title>Consensus、Consistency、FLP、CAP、Byzantine、PoW</title>
+      <link>https://liguangchang.cn/posts/distributed/distributed-consensus/</link>
+      <pubDate>Sat, 16 Oct 2021 23:36:46 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/distributed/distributed-consensus/</guid>
+      <description>Consensus 和 Consistency，前者侧重于集群节点达成一致的过程和算法，后者侧重于节点共识过程最终所有数据状态副本对外表现的数据一致性。 传统分布</description>
+    </item>
+    
+    <item>
+      <title>Byzantine、PBFT</title>
+      <link>https://liguangchang.cn/posts/distributed/distributed-pbft/</link>
+      <pubDate>Sat, 16 Oct 2021 22:32:43 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/distributed/distributed-pbft/</guid>
+      <description>Practical Byzantine Fault Tolerance,PBFT，实用拜占庭容错算法，在1999年召开的第三届操作系统设计与实现研讨会上有 Miguel Castro 和 Barbara Liskov 提出，(经常两个人)，</description>
+    </item>
+    
+    <item>
+      <title>The Raft Consensus Algorithm</title>
+      <link>https://liguangchang.cn/posts/distributed/distributed-raft/</link>
+      <pubDate>Fri, 15 Oct 2021 00:39:41 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/distributed/distributed-raft/</guid>
+      <description>历史 Raft 算法是 2013 年由斯坦福大学的 Diego Ongaro 和 John Ousterhout 提出的一种适用于非拜占庭容错环境下的分布式一致性算法，用于替代复杂的 Paxos 算法，安全性更高。 Raft 算法能在为</description>
+    </item>
+    
+    <item>
+      <title>Distributed leader election</title>
+      <link>https://liguangchang.cn/posts/distributed/distributed-election/</link>
+      <pubDate>Thu, 14 Oct 2021 00:00:39 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/distributed/distributed-election/</guid>
+      <description>分布式系统集群中，选举出来的 leader 节点负责对其他节点的协调和管理，保证集群内节点有序运行和数据的一致性，记录一些选主的算法。 Bully 在所有存活的节点中</description>
+    </item>
+    
+    <item>
+      <title>分布式协调、同步(中心化)</title>
+      <link>https://liguangchang.cn/posts/distributed/distributed-coordination/</link>
+      <pubDate>Mon, 11 Oct 2021 00:23:19 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/distributed/distributed-coordination/</guid>
+      <description>Distributed Mutual Exclusion 分布式互斥: 分布式系统里面排他性的资源访问方式，被互斥访问的共享资源就是临界资源(Critical Resource)。 集中式算法/中央</description>
+    </item>
+    
+    <item>
+      <title>单机-&gt;分布式</title>
+      <link>https://liguangchang.cn/posts/distributed/distributed-introduction/</link>
+      <pubDate>Sat, 02 Oct 2021 04:06:19 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/distributed/distributed-introduction/</guid>
+      <description>记录分布式由单机发展到分布式集群的一些驱动因素和存在的问题，十一回家路上看了一夜，凌晨四点到家编辑一下。。。 单机模式 所有应用程序和数据均部署</description>
+    </item>
+    
+    <item>
+      <title>分布式缓存</title>
+      <link>https://liguangchang.cn/posts/distributed/distributed-cache/</link>
+      <pubDate>Fri, 01 Oct 2021 12:40:40 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/distributed/distributed-cache/</guid>
+      <description>Cache 缓存：存储在计算机上的一个原始数据复制集，以便于访问。 属于存储领域，目的是为了让算法便捷高速运行，提升用户体验、系统性能。 Linux 的页表（pag</description>
+    </item>
+    
+  </channel>
+</rss>

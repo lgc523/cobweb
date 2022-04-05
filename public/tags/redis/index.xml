@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>redis on 互联网没一个好东西</title>
+    <link>https://liguangchang.cn/tags/redis/</link>
+    <description>Recent content in redis on 互联网没一个好东西</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 12 Jan 2022 00:39:52 +0800</lastBuildDate><atom:link href="https://liguangchang.cn/tags/redis/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Redis Skiplist</title>
+      <link>https://liguangchang.cn/posts/redis/redis-skiplist/</link>
+      <pubDate>Wed, 12 Jan 2022 00:39:52 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/redis/redis-skiplist/</guid>
+      <description>skiplist 是有序集合键的底层实现之一，有序集合包含的元素数量多或者元素是较长的字符串，redis 就会使用跳表来作为键的底层实现。 Skiplist 在每个节点中维持了</description>
+    </item>
+    
+    <item>
+      <title>Redis Ziplist</title>
+      <link>https://liguangchang.cn/posts/redis/redis-ziplist/</link>
+      <pubDate>Tue, 11 Jan 2022 01:03:09 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/redis/redis-ziplist/</guid>
+      <description>Ziplist 底层实现更紧凑，节省内存，没有指针的使用，基于 ziplist 实现了 LIst、Hash、Sorted Set 。 Ziplist 结构 zlbytes 列表长度 4B ，记录整个列表占用的内存字节数</description>
+    </item>
+    
+    <item>
+      <title>Redis Sds</title>
+      <link>https://liguangchang.cn/posts/redis/redis-sds/</link>
+      <pubDate>Tue, 11 Jan 2022 00:09:02 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/redis/redis-sds/</guid>
+      <description>simple dynamic string SDS 用来表示数据库中的字符串值，还被用做缓冲区（AOF缓冲区、客户端状态中的输入缓冲区）。 SDS 结构 len（4B）buf 已用长度 alloc (4B) buf 实际分</description>
+    </item>
+    
+    <item>
+      <title>Redis Sentinel Cluster</title>
+      <link>https://liguangchang.cn/posts/redis/redis-sentinel-cluster/</link>
+      <pubDate>Mon, 10 Jan 2022 01:11:11 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/redis/redis-sentinel-cluster/</guid>
+      <description>主从模式下的高可用，通过哨兵机制来保证，哨兵机制可以实现主从库的自动切换，解决主从复制模式下的故障转移，主要任务是 监控、选主、通知。 哨兵是一</description>
+    </item>
+    
+    <item>
+      <title>Redis Basic</title>
+      <link>https://liguangchang.cn/posts/redis/redis-basic/</link>
+      <pubDate>Tue, 04 Jan 2022 21:56:53 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/redis/redis-basic/</guid>
+      <description>数据结构 Value String List Hash Set Sorted Set 底层数据结构 简单动态字符串 双向链表 压缩列表 哈希表 跳表 整数数组 mapping String 简单动态字符串 List 双向链表 压缩列表 Hash 压缩列表 哈希表 Sorted Set 压</description>
+    </item>
+    
+    <item>
+      <title>Redis 数据结构</title>
+      <link>https://liguangchang.cn/posts/redis/redis-dso/</link>
+      <pubDate>Tue, 14 Sep 2021 00:40:34 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/redis/redis-dso/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

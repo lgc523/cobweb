@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="lgc523 ">
+<meta name="description" content="分布式系统集群中，选举出来的 leader 节点负责对其他节点的协调和管理，保证集群内节点有序运行和数据的一致性，记录一些选主的算法。 Bully 在所有存活的节点中" />
+<meta name="keywords" content=", distributed" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://liguangchang.cn/posts/distributed/distributed-election/" />
+
+
+    <title>
+        
+            Distributed leader election :: 互联网没一个好东西 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.4e5c639214707eff609bb55fe49e183dee42258a73bc90e4cc7b0a84f900798a.css">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Distributed leader election">
+<meta itemprop="description" content="分布式系统集群中，选举出来的 leader 节点负责对其他节点的协调和管理，保证集群内节点有序运行和数据的一致性，记录一些选主的算法。 Bully 在所有存活的节点中"><meta itemprop="datePublished" content="2021-10-14T00:00:39+08:00" />
+<meta itemprop="dateModified" content="2021-10-14T00:00:39+08:00" />
+<meta itemprop="wordCount" content="2438">
+<meta itemprop="keywords" content="distributed," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Distributed leader election"/>
+<meta name="twitter:description" content="分布式系统集群中，选举出来的 leader 节点负责对其他节点的协调和管理，保证集群内节点有序运行和数据的一致性，记录一些选主的算法。 Bully 在所有存活的节点中"/>
+
+
+
+
+    <meta property="og:title" content="Distributed leader election" />
+<meta property="og:description" content="分布式系统集群中，选举出来的 leader 节点负责对其他节点的协调和管理，保证集群内节点有序运行和数据的一致性，记录一些选主的算法。 Bully 在所有存活的节点中" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://liguangchang.cn/posts/distributed/distributed-election/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-10-14T00:00:39+08:00" />
+<meta property="article:modified_time" content="2021-10-14T00:00:39+08:00" /><meta property="og:site_name" content="互联网没一个好东西" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2021-10-14 00:00:39 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ 无需执妄为真 则自在无碍</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#1b1c1d;
+                   animation-duration:5s;">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">|</a></li><li><a href="/posts">post</a></li><li><a href="/about">about</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+                <span class="theme-toggle not-selectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+   <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+   3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+   13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+ </svg></span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        5 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://liguangchang.cn/posts/distributed/distributed-election/">Distributed leader election</a>
+      </h1>
+
+      
+
+      
+        <hr />
+        <aside id="toc">
+          <div class="toc-title">Table of Contents</div>
+          <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#bully">Bully</a></li>
+        <li><a href="#raft">Raft</a></li>
+        <li><a href="#zab">ZAB</a></li>
+        <li><a href="#总结">总结</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </aside>
+        <hr />
+
+      
+
+      <div class="post-content">
+        <p>分布式系统集群中，选举出来的 leader 节点负责对其他节点的协调和管理，保证集群内节点有序运行和数据的一致性，记录一些选主的算法。</p>
+<h3 id="bully">Bully</h3>
+<p><strong>在所有存活的节点中，选取ID最大的节点作为主节点</strong>。(默认前提:每个节点知道其他节点的ID)</p>
+<ul>
+<li>
+<p>节点角色</p>
+<p>节点的角色有 <strong>主节点和普通节点</strong>，初始化时所有节点平等，都是普通节点，都有成为主节点的权利，主节点只有一个，当且仅当主节点故障或者与其他节点失去联系后，才会重新选主。</p>
+</li>
+<li>
+<p>选举涉及到的消息</p>
+<ul>
+<li>Election 消息，用于发起选举</li>
+<li>Alive 消息，对 Election 的应答</li>
+<li>Victory 消息，竞选成功的主节点向其他发送宣誓主权的消息</li>
+</ul>
+</li>
+<li>
+<p>选举过程</p>
+<ol>
+<li>集群内每个节点判断自己的ID是否为当前存活节点的最大ID，如果是，向其他节点发送 Victory，宣示主权</li>
+<li>当前节点的ID如果不是当前存活节点中最大ID，向比自己ID大的节点的所有节点发送 Election 消息，等待其他节点回复</li>
+<li>一定时间内，当前节点没收到其他节点的回复Alive消息，则认为自己为主节点，向其他节点发送Victory 消息，宣誓自己成为主节点</li>
+<li>如果收到比自己ID大的节点发送的Alive消息，则等待其他节点发送Victory消息</li>
+<li>如果收到比自己ID小的节点发送的Election消息，则回复Alive消息，告知其重新选举</li>
+</ol>
+<p>普通节点变成主节点的选举过程，不参与选举(不向对其他人投票)，只会同步其他节点victory 消息，有一点倚老卖老的感觉。</p>
+<p>如果对集群内节点递增编号，从1到n，集群全部存活的情况下，最后最大的id n 成为了主节点</p>
+<p>那么每一步选举产生的消息量</p>
+<ol>
+<li>n 节点发送 n-1 条 victory 消息</li>
+<li>n-1 个节点选举比自己ID打的节点，发送 (n^2 - n)/2 条 Electoion 消息</li>
+<li>最大ID节点 n ，再次发送 victory 消息，宣誓主权</li>
+<li></li>
+<li>n-1 个中间节点会收到ID大于自己ID的节点发送 Alive 消息 (n2+n)/2</li>
+</ol>
+<p>所有节点之间通信量还是很大的，选举过程遇到故障节点，通信量、和选举时间都会随之增加。</p>
+<p>Bully 算法选举速度快，简单易实现，但是每<strong>个节点需要维护集群内所有节点的信息</strong>，<strong>任意一个比当前主节点ID大的新节点或节点故障后恢复加入集群的时候，都可能会出发重新选举，成为新的主节点</strong>，如果频繁退出、加入集群，就会导致频繁切主。</p>
+<p><strong>MongoDB 的副本集故障转移功能，就是采用 Bully 算法，采用节点的最后操作时间戳来表示ID，时间戳最新的阶段ID最大。</strong></p>
+</li>
+</ul>
+<h3 id="raft">Raft</h3>
+<p><strong>少数服从多数，获得投票最多的节点成为主节点。</strong></p>
+<ul>
+<li>
+<h6 id="节点角色">节点角色</h6>
+<ul>
+<li>Leader，主节点，同一时刻只能有一个 leader</li>
+<li>Candidate，候选节点，每个节点都可以成为 Candidate，Candidate 节点才有可能成为 Leader</li>
+<li>Follower，Leader 的跟随者，不能发起选举</li>
+</ul>
+</li>
+<li>
+<p>选举流程</p>
+<ul>
+<li>初始化时，所有节点都是 Follower</li>
+<li>开始选举，<strong>所有节点从 Follower 转化为 Candidate ，并向其他节点发送选举请求</strong>。</li>
+<li>其他节点根据<strong>收到的选举先后顺序</strong>，回复是否同意成为 Leader （<strong>每一轮选举中，一个节点只能投出一票</strong>）。</li>
+<li>若某一个节点<strong>获得超过一半的投票</strong>，则转化为 Leader，<strong>其他节点从 Candidate 降为 Follower</strong> ，Leader 与 Follower 节点之间会定期发送心跳包，检测主节点是否存活。</li>
+<li>Leader 任期到了(发现其他节点开始下一轮选举)，<strong>Leader 节点的状态转化为 Follower</strong> ，进入新一轮选主（<strong>正常周期性选举</strong>）。</li>
+</ul>
+<p>Raft 选举速度快，易于实现，要求节点可以相互通信，并且要获得半数以上的投票数才能选出 Leader，通信量大，<strong>稳定性比Bully 好，新节点加入或者节点故障恢复后，会触发选主，但是不一定会切主，除非新节点货故障后恢复的节点获得半数以上投票。</strong></p>
+</li>
+</ul>
+<p>Bully 像是不公平的选主，Raft 像是公平的选主，下面的 ZAB 像是可以控制的优先队列，秒啊。</p>
+<h3 id="zab">ZAB</h3>
+<p><strong>具有优先级的民主选举算法</strong></p>
+<p>Zookeeper Atomic Broadcast ，为了Zookeeper 实现分布式协调功能设计的，相对于Raft <strong>增加了通过节点ID和数据ID作为参考选主</strong>，<strong>节点ID和数据ID越大，表示数据越新，优先成为主，尽可能保证数据的最新性</strong>。</p>
+<p>这样可以通过水平拓展机器的数量来控制迁移主节点，Raft 主节点可能水平拓展也不会改变主节点，人类总喜欢去掌控所有能够掌控的。</p>
+<ul>
+<li><strong>节点角色</strong>
+<ul>
+<li><strong>Leader 主节点</strong></li>
+<li><strong>Follower 跟随者节点</strong></li>
+<li><strong>Observer 观察者，无投票权</strong></li>
+</ul>
+</li>
+<li><strong>选举过程状态变化</strong>
+<ul>
+<li>Looking 状态，选举状态，当节点处于该状态，会认为当前集群没有 Leader，因此自己进入选举状态</li>
+<li>Leading 状态，领导者，已经选出主，当前节点为Leader</li>
+<li>Following 状态，跟随着状态，集群有主，其他非主节点状态更新为Following，表示对 Leader 的追随</li>
+<li>Observing 状态，观察者模式，表示当前节点为 Observer，持观望态度，没有投票权和选举权</li>
+</ul>
+</li>
+</ul>
+<p>投票过程中，每个节点都有一个唯一的三元组（server_id，server_zxID，epoch）</p>
+<ol>
+<li><strong>server_id 表示节点的唯一ID</strong></li>
+<li><strong>server_zxID 表示本节点存放的数据ID，数据ID越大表示数据越新，选举权重越大</strong></li>
+<li><strong>epoch 表示当前选举轮数，一般用逻辑时钟表示</strong></li>
+</ol>
+<p>ZAB 选举算法的核心是少数服从多数，ID大的节点优先成为主，选举过程中通过 <strong>(vote_id，vote_zxID)</strong> 来表明投票给哪个节点，<strong>vote_id</strong> 表示被投票节点的ID，<strong>vote_zxID</strong> 表示被投票节点的服务器 zxID。</p>
+<p><strong>选主原则: server_zxID 最大者称为 Leader，若 server_zxID 相同，server_id 最大者成为 Leader</strong></p>
+<ul>
+<li><strong>选举过程</strong>
+<ul>
+<li>系统启动，所有节点处于 Looking 状态，epoch =1，zxID =0，每个节点都推选自己，将投票信息广播出去</li>
+<li>根据规则，节点的 zx_ID 相同，推选 server_id 最大者为 leader，其他节点修改 vote_id 为最大节点ID，重新广播</li>
+<li>最大ID 节点当选 leader ，处于 Leading 状态，维持和其他节点的心跳，其他节点处于 Following 状态</li>
+</ul>
+</li>
+<li>特征
+<ul>
+<li>算法性能高、广播消息，n 个节点组成的集群，同时广播，集群内通信量为 n * (n-1) 个消息，容易产生广播风暴</li>
+<li>除了选举节点，还增加了对比节点ID和数据ID，需要知道所有节点的ID和数据ID，选举时间相对较长</li>
+<li>选举稳定，当有新节点加入或节点故障恢复，会触发选主，但是不一定切主，除非节点数据数据ID和节点ID最大，并且获得投票过半，才会导致切主。</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结">总结</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Bully</th>
+<th>Raft</th>
+<th>ZAB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>消息类型</td>
+<td>alive</td>
+<td>同意/不同意选举</td>
+<td>&lt;epoch,vote_id,vote_zxID&gt;</td>
+</tr>
+<tr>
+<td>选举机制</td>
+<td>倾向ID更大节点（霸道）</td>
+<td>收到过半投票</td>
+<td>倾向让数据最新/ID最大的节点</td>
+</tr>
+<tr>
+<td>选举过程</td>
+<td>Leader 无响应/ID最大节点恢复故障时</td>
+<td>Candidate可以竞选，每个Follow只有一次投票权</td>
+<td>可以多次投票，根据三元组选主</td>
+</tr>
+<tr>
+<td>选举时间</td>
+<td>短</td>
+<td>较短</td>
+<td>较长</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>低</td>
+<td>高</td>
+<td>较高</td>
+</tr>
+</tbody>
+</table>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://liguangchang.cn/tags/distributed/">distributed</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        2438 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2021-10-14 00:00
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+    <div class="pagination">
+        
+        <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+        </div>
+        
+
+        <div class="pagination__buttons">
+            
+            <span class="button previous">
+                <a href="https://liguangchang.cn/posts/distributed/distributed-raft/">
+                    <span class="button__icon">←</span>
+                    <span class="button__text">The Raft Consensus Algorithm</span>
+                </a>
+            </span>
+            
+
+            
+            <span class="button next">
+                <a href="https://liguangchang.cn/posts/distributed/distributed-coordination/">
+                    <span class="button__text">分布式协调、同步(中心化)</span>
+                    <span class="button__icon">→</span>
+                </a>
+            </span>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            
+            
+            
+            
+            <span>Powered by Hugo · hello-friend-ng</span>
+        </div>
+    </div>
+    
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span> &#183; <a href="https://beian.miit.gov.cn">京ICP备2020035531号-2</a> &#183; <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41012202000328" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"></span>
+        </div>
+    </div>
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2d3d449fc0ff117f00ac91342a8f76cd5b710411d7a0254dbe75da3234d2f685d6a0c44cff60c414e90b6a149da8e4032c713c25e4e6838e2e3918dc0ad2e81c.js" integrity="sha512-LT1En8D/EX8ArJE0Ko92zVtxBBHXoCVNvnXaMjTS9oXWoMRM/2DEFOkLahSdqOQDLHE8JeTmg44uORjcCtLoHA=="></script>
+
+
+
+    </body>
+</html>

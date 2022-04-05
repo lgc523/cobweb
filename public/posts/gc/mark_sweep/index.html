@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="lgc523 ">
+<meta name="description" content="标记清楚算法由标记阶段和清除阶段 标记阶段把所有活动对象打上标记 清除阶段把没有标记的对象回收 mark phase 首先标记根直接引用的对象（在内存中存活的对象）" />
+<meta name="keywords" content=", gc" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://liguangchang.cn/posts/gc/mark_sweep/" />
+
+
+    <title>
+        
+            Mark Sweep GC :: 互联网没一个好东西 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.4e5c639214707eff609bb55fe49e183dee42258a73bc90e4cc7b0a84f900798a.css">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Mark Sweep GC">
+<meta itemprop="description" content="标记清楚算法由标记阶段和清除阶段 标记阶段把所有活动对象打上标记 清除阶段把没有标记的对象回收 mark phase 首先标记根直接引用的对象（在内存中存活的对象）"><meta itemprop="datePublished" content="2021-11-15T23:10:47+08:00" />
+<meta itemprop="dateModified" content="2021-11-15T23:10:47+08:00" />
+<meta itemprop="wordCount" content="2048">
+<meta itemprop="keywords" content="gc," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Mark Sweep GC"/>
+<meta name="twitter:description" content="标记清楚算法由标记阶段和清除阶段 标记阶段把所有活动对象打上标记 清除阶段把没有标记的对象回收 mark phase 首先标记根直接引用的对象（在内存中存活的对象）"/>
+
+
+
+
+    <meta property="og:title" content="Mark Sweep GC" />
+<meta property="og:description" content="标记清楚算法由标记阶段和清除阶段 标记阶段把所有活动对象打上标记 清除阶段把没有标记的对象回收 mark phase 首先标记根直接引用的对象（在内存中存活的对象）" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://liguangchang.cn/posts/gc/mark_sweep/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-11-15T23:10:47+08:00" />
+<meta property="article:modified_time" content="2021-11-15T23:10:47+08:00" /><meta property="og:site_name" content="互联网没一个好东西" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2021-11-15 23:10:47 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ 无需执妄为真 则自在无碍</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#1b1c1d;
+                   animation-duration:5s;">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">|</a></li><li><a href="/posts">post</a></li><li><a href="/about">about</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+                <span class="theme-toggle not-selectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+   <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+   3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+   13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+ </svg></span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        5 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://liguangchang.cn/posts/gc/mark_sweep/">Mark Sweep GC</a>
+      </h1>
+
+      
+
+      
+        <hr />
+        <aside id="toc">
+          <div class="toc-title">Table of Contents</div>
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#mark-phase">mark phase</a></li>
+    <li><a href="#dfs-bfs">DFS BFS</a></li>
+    <li><a href="#sweep-phase">sweep phase</a></li>
+    <li><a href="#allocation">allocation</a>
+      <ul>
+        <li><a href="#first-fit">First-fit</a></li>
+        <li><a href="#best-fit">Best-fit</a></li>
+        <li><a href="#worst-fit">Worst-fit</a></li>
+      </ul>
+    </li>
+    <li><a href="#coalescing">coalescing</a></li>
+    <li><a href="#advantage">advantage</a></li>
+    <li><a href="#deficiency">deficiency</a></li>
+    <li><a href="#allocation-speed">allocation speed</a></li>
+    <li><a href="#not-compatible-cow">not-compatible COW</a></li>
+    <li><a href="#multi-listnode">multi listNode</a></li>
+    <li><a href="#bibop">BiBOP</a></li>
+    <li><a href="#bitmap-mark">bitmap mark</a></li>
+    <li><a href="#lazy-sweep">Lazy Sweep</a></li>
+    <li><a href="#q">Q</a></li>
+  </ul>
+</nav>
+        </aside>
+        <hr />
+
+      
+
+      <div class="post-content">
+        <p>标记清楚算法由标记阶段和清除阶段</p>
+<ul>
+<li>标记阶段把所有活动对象打上标记</li>
+<li>清除阶段把没有标记的对象回收</li>
+</ul>
+<h2 id="mark-phase">mark phase</h2>
+<ol>
+<li>首先标记根直接引用的对象（在内存中存活的对象）</li>
+<li>递归地标记记通过指针数组能访问到的对象，避免重复标记</li>
+</ol>
+<p>标记未完成，会对活动对象的头部进行置位操作，这个位分配在对象的头中，能够通过对象访问，标识对象是否已经标记。</p>
+<p>标记话费时间和内存中活动对象总数成正比，过程就是从根遍历打标记。</p>
+<h2 id="dfs-bfs">DFS BFS</h2>
+<p>搜索对象并进行标记时使用 DFS/BFS，搜索的步数不会有差别，内存使用量上DFS 更能压低内存使用量，在树变高的情况更明显</p>
+<p>？ 这块是局部性导致的吗 ？</p>
+<h2 id="sweep-phase">sweep phase</h2>
+<p>清除阶段，会遍历整个堆，回收没有打上标记的对象。</p>
+<p>对象头上的 size 域，标识对象存储信息。</p>
+<ul>
+<li><strong>清除从堆的首地址开始，按照顺序遍历一个个对象的标志位，设置了标志位，表明对象时活动对象，取消标志位，准备下一次GC，下一次GC，会先在标记一次，再来清除</strong>。</li>
+<li>回收对象就是<strong>把对象作为分块，连接到被称为空闲链表的单向链表的头</strong>，之后分配通过遍历链表进行。</li>
+<li>回收修改了当前对象的 next 域，连接单向链表，对象已死，重写域没有问题。</li>
+</ul>
+<p>同样，堆越大，清除阶段耗时越久。</p>
+<h2 id="allocation">allocation</h2>
+<p>分配：mutator 申请分块时，搜索空闲链表寻找大小合适的分块，分配给 mutator。</p>
+<h3 id="first-fit">First-fit</h3>
+<ul>
+<li>找到相同的分块大小直接返回</li>
+<li>找到大的分块会将其分割，剩余分块返回空闲链表，剩余的分块可能会一直不满足申请分块需求，会一直占用前面的位置</li>
+<li>没有找到合适的分块，返回 NULL</li>
+</ul>
+<h3 id="best-fit">Best-fit</h3>
+<p>遍历链表，返回大于等于申请大小的最小分块</p>
+<h3 id="worst-fit">Worst-fit</h3>
+<p>找到最大分块将其分割，将剩余分块最大化，容易产生大量小分块</p>
+<h2 id="coalescing">coalescing</h2>
+<p>分配策略可能会产生大量的小分块，如果他们是连续的，就能把所有的小分块连接在一起形成一个大分块，<strong>连接连续分块的操作成为合并，合并在清除阶段进行</strong>。</p>
+<h2 id="advantage">advantage</h2>
+<ul>
+<li>实现简单，与其他算法组合也相应简单</li>
+<li>与保守式GC算法兼容 (对象不能移动)</li>
+</ul>
+<h2 id="deficiency">deficiency</h2>
+<p><strong>fragmentation</strong>：<strong>会逐渐产生被细化的分块，导致无数的小分块散布在堆的各处，增加 mutator 负担（访问时间）</strong>。</p>
+<h2 id="allocation-speed">allocation speed</h2>
+<p><strong>分块不连续，每次分配都必须遍历空闲链表，找到足够大的分块，最快情况每次都遍历到单向链表到最后。</strong></p>
+<h2 id="not-compatible-cow">not-compatible COW</h2>
+<p>Copy on write 主要是通过 lazy copy ，多用在共享内存读多写少的场景， 涉及到 MMU、虚拟内存映射、页面调度。</p>
+<p>在需要对共享内存空间（read_only）写入时，不直接重写共享内存，避免数据不一致，先复制自己私有空间的数据，对私有空间进行重写。复制后只访问这个私有空间，不访问共享内存，在写入时复制。</p>
+<p>mark sweep 两个阶段设置取消标志位，都会重写对象，频繁发生不应该的复制，进而压迫内存空间，为了处理这个问题，采用 bitmap marking 标记，bitmap 对字节的一个bit 通过map 进行映射，只是为了减少 copy 的消耗。</p>
+<h2 id="multi-listnode">multi listNode</h2>
+<p>单个单向链表存储空闲的分块，大小不同的分块在申请的时候寻找合适的分块比较浪费时间，利用多个空闲链表可以加速合适分块的寻找，但是维护空闲链表数组的数量太大也会压迫到内存空间，并且数组空间是连续的，比较占用堆内存的利用率。</p>
+<p>通常会给分块大小设定一个上限，如果大于等于阈值，全部采用一个空闲链表处理，有点有限负载隔离的意思。</p>
+<h2 id="bibop">BiBOP</h2>
+<p><strong>Big Bag Of Pages</strong> ：<strong>将大小相近的对象整理成固定大小的块进行管理，将堆分割成固定大小的块，每个块只能配置同样大小的对象。</strong></p>
+<p>相当于提前分配好存放固定大小块链表的数组，这样使得单个块的利用率得到了提高，一定程度的减少了碎片化，但是堆内存的利用率并不高，必要的时候还需要扩缩容操作。</p>
+<h2 id="bitmap-mark">bitmap mark</h2>
+<ul>
+<li>
+<p>标记阶段</p>
+<p><strong>收集对象的标志位并表格化，不和对象一起管理</strong>，标记阶段在<strong>位图表格</strong>的映射位置置位，利用 bitmap table 来进行 mark。</p>
+<p>其实就是降低 COW lazy write 的开销，COW 的影响还是有的，如果堆内存很大，bitmap 也会被放大。</p>
+</li>
+<li>
+<p>清除阶段</p>
+<p>之前清除阶段需要遍历整个堆，把非活动对象链接到空闲链表，同时取消活动对象的标志位。</p>
+<p>利用 bitmap，清除遍历堆的同时遍历 bitmap，这个时候，<strong>如果设置了标志位，不会消除bitmap 上的位，放到之后一并进行</strong>。</p>
+</li>
+<li>
+<p>多个堆</p>
+<p>存在多个堆的情况，单纯的位运算进行地址映射比较困难，通常构建多个 bitmap table。</p>
+</li>
+</ul>
+<h2 id="lazy-sweep">Lazy Sweep</h2>
+<p>Mark Sweep 两个阶段都是遍历全部的堆内对象，堆越大，STW 越长，进一步妨碍 mutator 的处理。</p>
+<p>标记阶段是必须进行的，清理阶段大部分不是必须的，满足了当下的分配需求可以在进行清除，通过延迟清除可以减少因为清除操作导致的 mutator 最大暂停时间。</p>
+<p><strong>分配时直接调用 lazy_sweep，进行消除操作</strong></p>
+<ul>
+<li>如果能够通过清除来分配，就返回分块</li>
+<li>不能分配，返回 NULL，就执行标记操作，在调用 lazy_sweep 分配，还没分配成功， mutator 就 hang 住 ？？？</li>
+</ul>
+<p>相当于每次从头全量遍历寻找合适的分块， lazy_sweep 通过全局的遍历偏移来减少遍历的时间，但是单向遍历有可能就刚好错过了，如果可以双向遍历是不是好一点，结合多级的空闲链表数组，其实遍历的 round time 也很小了。</p>
+<p>极端情况，活动对象和非活动对象在堆内存中形成了两个相邻的分区，在清除活动对象附近时，会增加 mutator 的一次等待，并且可能会周期性的出现。</p>
+<h2 id="q">Q</h2>
+<ol>
+<li>会不会出现内存抖动，什么是内存抖动，内存抖动会影响什么</li>
+<li>能不能像 java TLAB 对对象的分配进行有限的负载控制，让到堆上的对象进行均衡</li>
+<li>逃逸的问题</li>
+</ol>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://liguangchang.cn/tags/gc/">gc</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        2048 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2021-11-15 23:10
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+    <div class="pagination">
+        
+        <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+        </div>
+        
+
+        <div class="pagination__buttons">
+            
+            <span class="button previous">
+                <a href="https://liguangchang.cn/posts/gc/reference_counting/">
+                    <span class="button__icon">←</span>
+                    <span class="button__text">Reference Counting</span>
+                </a>
+            </span>
+            
+
+            
+            <span class="button next">
+                <a href="https://liguangchang.cn/posts/gc/garbage_collection/">
+                    <span class="button__text">Garbage Collection</span>
+                    <span class="button__icon">→</span>
+                </a>
+            </span>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            
+            
+            
+            
+            <span>Powered by Hugo · hello-friend-ng</span>
+        </div>
+    </div>
+    
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span> &#183; <a href="https://beian.miit.gov.cn">京ICP备2020035531号-2</a> &#183; <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41012202000328" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"></span>
+        </div>
+    </div>
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2d3d449fc0ff117f00ac91342a8f76cd5b710411d7a0254dbe75da3234d2f685d6a0c44cff60c414e90b6a149da8e4032c713c25e4e6838e2e3918dc0ad2e81c.js" integrity="sha512-LT1En8D/EX8ArJE0Ko92zVtxBBHXoCVNvnXaMjTS9oXWoMRM/2DEFOkLahSdqOQDLHE8JeTmg44uORjcCtLoHA=="></script>
+
+
+
+    </body>
+</html>

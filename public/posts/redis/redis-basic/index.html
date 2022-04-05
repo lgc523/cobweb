@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="lgc523 ">
+<meta name="description" content="数据结构 Value String List Hash Set Sorted Set 底层数据结构 简单动态字符串 双向链表 压缩列表 哈希表 跳表 整数数组 mapping String 简单动态字符串 List 双向链表 压缩列表 Hash 压缩列表 哈希表 Sorted Set 压" />
+<meta name="keywords" content=", redis" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://liguangchang.cn/posts/redis/redis-basic/" />
+
+
+    <title>
+        
+            Redis Basic :: 互联网没一个好东西 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.4e5c639214707eff609bb55fe49e183dee42258a73bc90e4cc7b0a84f900798a.css">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Redis Basic">
+<meta itemprop="description" content="数据结构 Value String List Hash Set Sorted Set 底层数据结构 简单动态字符串 双向链表 压缩列表 哈希表 跳表 整数数组 mapping String 简单动态字符串 List 双向链表 压缩列表 Hash 压缩列表 哈希表 Sorted Set 压"><meta itemprop="datePublished" content="2022-01-04T21:56:53+08:00" />
+<meta itemprop="dateModified" content="2022-01-04T21:56:53+08:00" />
+<meta itemprop="wordCount" content="4326">
+<meta itemprop="keywords" content="redis," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Redis Basic"/>
+<meta name="twitter:description" content="数据结构 Value String List Hash Set Sorted Set 底层数据结构 简单动态字符串 双向链表 压缩列表 哈希表 跳表 整数数组 mapping String 简单动态字符串 List 双向链表 压缩列表 Hash 压缩列表 哈希表 Sorted Set 压"/>
+
+
+
+
+    <meta property="og:title" content="Redis Basic" />
+<meta property="og:description" content="数据结构 Value String List Hash Set Sorted Set 底层数据结构 简单动态字符串 双向链表 压缩列表 哈希表 跳表 整数数组 mapping String 简单动态字符串 List 双向链表 压缩列表 Hash 压缩列表 哈希表 Sorted Set 压" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://liguangchang.cn/posts/redis/redis-basic/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-01-04T21:56:53+08:00" />
+<meta property="article:modified_time" content="2022-01-04T21:56:53+08:00" /><meta property="og:site_name" content="互联网没一个好东西" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2022-01-04 21:56:53 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ 无需执妄为真 则自在无碍</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#1b1c1d;
+                   animation-duration:5s;">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">|</a></li><li><a href="/posts">post</a></li><li><a href="/about">about</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+                <span class="theme-toggle not-selectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+   <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+   3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+   13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+ </svg></span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        9 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://liguangchang.cn/posts/redis/redis-basic/">Redis Basic</a>
+      </h1>
+
+      
+
+      
+        <hr />
+        <aside id="toc">
+          <div class="toc-title">Table of Contents</div>
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#数据结构">数据结构</a>
+      <ul>
+        <li><a href="#value">Value</a></li>
+        <li><a href="#底层数据结构">底层数据结构</a></li>
+        <li><a href="#mapping">mapping</a></li>
+        <li><a href="#键值对存储结构">键值对存储结构</a></li>
+        <li><a href="#hash-散列冲突">Hash 散列冲突</a></li>
+        <li><a href="#解决冲突">解决冲突</a></li>
+        <li><a href="#两个全局哈希表">两个全局哈希表</a></li>
+        <li><a href="#渐进式-rehash">渐进式 rehash</a></li>
+        <li><a href="#集合数据效率">集合数据效率</a></li>
+        <li><a href="#压缩列表">压缩列表</a></li>
+        <li><a href="#跳表">跳表</a></li>
+        <li><a href="#时间复杂度">时间复杂度</a></li>
+        <li><a href="#常见复杂度">常见复杂度</a></li>
+        <li><a href="#内存利用率">内存利用率</a></li>
+      </ul>
+    </li>
+    <li><a href="#单线程快">“单线程快”</a>
+      <ul>
+        <li><a href="#socket-非阻塞模式">Socket 非阻塞模式</a></li>
+        <li><a href="#io-多路复用">IO 多路复用</a></li>
+        <li><a href="#单线程处理-io-性能瓶颈">单线程处理 IO 性能瓶颈</a></li>
+      </ul>
+    </li>
+    <li><a href="#aof">AOF</a>
+      <ul>
+        <li><a href="#日志格式">日志格式</a></li>
+        <li><a href="#appendfsync">appendfsync</a></li>
+        <li><a href="#aof重写">AOF重写</a></li>
+        <li><a href="#重写时机">重写时机</a></li>
+        <li><a href="#bgrewriteaof">bgrewriteaof</a></li>
+      </ul>
+    </li>
+    <li><a href="#rdb">RDB</a></li>
+    <li><a href="#读写分离">读写分离</a>
+      <ul>
+        <li><a href="#主从同步">主从同步</a></li>
+        <li><a href="#主从断开增量复制">主从断开增量复制</a></li>
+        <li><a href="#repl-diskless-sync">repl-diskless-sync</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </aside>
+        <hr />
+
+      
+
+      <div class="post-content">
+        <h2 id="数据结构">数据结构</h2>
+<h3 id="value">Value</h3>
+<ul>
+<li>String</li>
+<li>List</li>
+<li>Hash</li>
+<li>Set</li>
+<li>Sorted Set</li>
+</ul>
+<h3 id="底层数据结构">底层数据结构</h3>
+<ul>
+<li>简单动态字符串</li>
+<li>双向链表</li>
+<li>压缩列表</li>
+<li>哈希表</li>
+<li>跳表</li>
+<li>整数数组</li>
+</ul>
+<h3 id="mapping">mapping</h3>
+<ul>
+<li>String
+<ul>
+<li>简单动态字符串</li>
+</ul>
+</li>
+<li>List
+<ul>
+<li>双向链表</li>
+<li>压缩列表</li>
+</ul>
+</li>
+<li>Hash
+<ul>
+<li>压缩列表</li>
+<li>哈希表</li>
+</ul>
+</li>
+<li>Sorted Set
+<ul>
+<li>压缩列表</li>
+<li>跳表</li>
+</ul>
+</li>
+<li>Set
+<ul>
+<li>哈希表</li>
+<li>整数数组</li>
+</ul>
+</li>
+</ul>
+<h3 id="键值对存储结构">键值对存储结构</h3>
+<p>redis 使用 哈希表来保存所有的键值对，哈希桶存储指向具体值的指针，对外提供一个很简洁的操作接口 O(1) ，屏蔽了不同的数据类型。</p>
+<h3 id="hash-散列冲突">Hash 散列冲突</h3>
+<p><strong>key0  !=  key1，hash(key0) = hash (key1) ，就会放到一个桶的位置，数据量越大哈希冲突的概率就会变大，n -&gt; [0,len(array)]</strong></p>
+<h3 id="解决冲突">解决冲突</h3>
+<ul>
+<li>
+<p>链地址法</p>
+<p>冲突的数据排成链表，头插（新的数据在链表的末尾），链表顺序遍历速度慢，hash 算法不好会退化成链表 O(n)。</p>
+<p>看具体的实现，java hashMap 在桶内数据 &gt; 8 并且数组长度&gt; 64 ，就把链表转化为红黑树，根据 hash 算法的分布概率情况，以及均摊分析后，时间复杂度还是 O(1)。</p>
+</li>
+<li>
+<p>开放地址探测法</p>
+<p>出现冲突，继续找合适的位置。</p>
+<ul>
+<li>
+<p>线性探测法</p>
+<p>直接判断使用下一个空闲单元，步长为1。</p>
+</li>
+<li>
+<p>平方探测法</p>
+<p>使用公式 冲突单元索引  + 1^2/2^2/3^2&hellip; 不是线性查找， 步长较大，一般探测一半就足够了。</p>
+</li>
+<li>
+<p>双散列函数探测法</p>
+<p>使用另外一个散列函数作为步长增量探测，<strong>不太理解</strong>。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>再哈希</p>
+<ul>
+<li>同时构造多个不同的哈希函数，发生冲突时用其他哈希函数计算，知道冲突不在产生，不易产生聚集，增加了计算时间。</li>
+</ul>
+</li>
+<li>
+<p>建立公共溢出区</p>
+<ul>
+<li>将哈希表氛围公共表和溢出表，溢出发生时，将所有溢出数据统一放到溢出区。</li>
+</ul>
+</li>
+</ul>
+<p>Redis 解决 hash 冲突也是通过链式 hash，不过会做 rehash 操作，通过增加现有的 hash 桶数量，让逐渐增多的元素分散存储，减少单个桶的元素数量，减少单个桶的冲突。</p>
+<h3 id="两个全局哈希表">两个全局哈希表</h3>
+<p>Redis 采用了两个全局哈希表，一开始默认使用表1，此时表2 没有被分配空间，随着数据增多，开始 rehash，增加现有桶的数量，让元素能够更分散，减少单个桶的元素数量。</p>
+<ol>
+<li>给 表2 分配更大的空间</li>
+<li>把表1 中的数据重新映射并拷贝到表2</li>
+<li>释放表1 空间</li>
+</ol>
+<h3 id="渐进式-rehash">渐进式 rehash</h3>
+<p>Rehash 的过程中表数据迁移会阻塞线程，无法服务其他请求。</p>
+<p>Redis 在拷贝数据的时候，每处理一个请求时，从表1中第一个索引位置开始，顺带将这个索引位置上的所有数据拷贝到表2中，等待下一个请求时，在顺带拷贝表1 中的下一个索引位置的数据。</p>
+<p><strong>将迁移的工作量分散到了多次的请求中，避免了长时间迁移导致的不可用，但是会长时间存在两个哈希表。</strong></p>
+<p><strong>？Golang rehash</strong></p>
+<h3 id="集合数据效率">集合数据效率</h3>
+<p>整数数组和双向链表都是顺序读写，时间复杂度为 O(N)，操作效率比较低。</p>
+<h3 id="压缩列表">压缩列表</h3>
+<p>压缩列表类似数组，每一个元素都对应保存一个数据，和数组不同的是，表头有三个字段 <strong>zlbytes、zltail、zllen</strong>，分别表示<strong>列表长度</strong>、<strong>列表尾的偏移量</strong>和<strong>列表中的 entry 个数</strong>，<strong>表尾 zlend，表示列表结束</strong>。</p>
+<p>基于这样的结构，压缩列表访问第一个和最后一个元素的时间复杂度是 O(1)，访问中间元素的时间复杂度是 O(N)。</p>
+<h3 id="跳表">跳表</h3>
+<p>跳表结构在链表基础上构建多级索引，有了索引就比大小，跳来跳去定位到元素，减少了链表的顺序寻找次数，当数据量很大的时候，时间复杂度就是 O(logN)。</p>
+<h3 id="时间复杂度">时间复杂度</h3>
+<ul>
+<li>整数数组</li>
+<li>压缩列表</li>
+<li>跳表</li>
+<li>双向列表</li>
+<li>哈希表 O(1)</li>
+</ul>
+<h3 id="常见复杂度">常见复杂度</h3>
+<ul>
+<li>
+<p>单元素操作</p>
+<ul>
+<li>Hash (Hset,Hget,HDel )</li>
+<li>Set (SADD,SREM,SRANDMEMBER)</li>
+</ul>
+<p>底层数据类型是哈希结构时，对单元素的操作时间复杂度是 O(1)，支持多个参数时，时间复杂度也会随着参数个数增加。</p>
+</li>
+<li>
+<p>范围操作</p>
+<ul>
+<li>
+<p>Hash HGETALL</p>
+</li>
+<li>
+<p>Set SMEMBERS</p>
+</li>
+<li>
+<p>List LRANGE</p>
+</li>
+<li>
+<p>ZSet ZRANGE</p>
+<p>这类操作比较耗时，会造成阻塞。</p>
+</li>
+<li>
+<p>SCAN （HSCAN、SSCAN、ZSCAN）渐进式遍历，可以避免阻塞。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>统计操作</p>
+<ul>
+<li>集合类型对集合中的所有元素个书的记录</li>
+</ul>
+</li>
+<li>
+<p>LLEN，SCARD  O(1)</p>
+<ul>
+<li>集合类型采用压缩列表、双向链表、整数数组存储时，有专门记录元素的个数统计，可以高效完成统计。</li>
+</ul>
+</li>
+<li>
+<p>例外</p>
+<ul>
+<li>LPOP,RPOP,LPUSH,RPUSH 在队列的头尾增删元素，可以通过偏移量直接定位，负责度也只有O(1)。</li>
+</ul>
+</li>
+</ul>
+<h3 id="内存利用率">内存利用率</h3>
+<p>底层紧凑的数据结构：数组和压缩列表可以提高内存利用率，另外数组对 CPU 高速缓存支持更友好，在集合元素较少的情况下，默认采用紧凑排列的方式存储，利用 CPU 高速缓存不会降低访问速度，数据量超过设定阈值后，转为哈希和跳表存储来保证查询效率。</p>
+<h2 id="单线程快">“单线程快”</h2>
+<p>Redis <strong>网络IO 和键值对读写由一个线程完成</strong>，放弃多线程并发访问带来的控制开销，其他的功能eg:持久化、异步删除、集群数据同步等由额外的线程执行。</p>
+<p>Redis 利用<strong>单线程 + 多路复用（socket） + 高效数据结构</strong>来提供并发高性能，网络IO 过程为 bind/listen，<strong>accept，recv</strong>，开始建立 socket 链接后，会存在阻塞。</p>
+<h3 id="socket-非阻塞模式">Socket 非阻塞模式</h3>
+<ul>
+<li>socket  返回  主动套接字</li>
+<li>listen    返回  监听套接字     可设置非阻塞模型 服务端监听连接请求，没有链接就空闲不处理，等待链接通知</li>
+<li>Accept  返回  已链接套接字 可设置非阻塞模型 服务端监听等待数据到达</li>
+</ul>
+<h3 id="io-多路复用">IO 多路复用</h3>
+<p>这个没啥写的。</p>
+<h3 id="单线程处理-io-性能瓶颈">单线程处理 IO 性能瓶颈</h3>
+<p>任意一个请求发生耗时，会影响整个性能</p>
+<ul>
+<li>操作 bigkey，读写都耗时</li>
+<li>大量 key 集中过期，<strong>过期机制在主线程中执行</strong>（4.0 feat lazy-free 异步释放）</li>
+<li>使用复杂度过高的命令，操作数据量大</li>
+<li>淘汰策略，淘汰策略也是在主线程中执行，内存超过上限后，每次写入都需要额外做淘汰策略，增加耗时（前提是配置了淘汰策略）</li>
+<li>AOF 开启always 每次写操作都要额外写磁盘</li>
+<li>主从全量同步生成 RDB，fork 子进程一瞬间会阻塞整个线程</li>
+<li>并发量非常大，虽然IO 多路复用，单线程同步读写客户端 IO ，无法利用到多核，就像一直工作的发牌机器（6.0 feat 多线程读写客户端数据，依然单线程执行命令）</li>
+</ul>
+<p>利用审计平台，严格避免复杂度搞的命令。</p>
+<h2 id="aof">AOF</h2>
+<p>Append Only File，AOF 日志流程： 执行命令写内存，记录日志，<strong>在主线程中执行</strong>。</p>
+<h3 id="日志格式">日志格式</h3>
+<p>*n 表示命令有几个部分，每部分都是 $+数字开头，后面跟着具体的命令、k/v，数字表示这部分中的命令、k/v 一共有多少字节。</p>
+<pre tabindex="0"><code>set testkey testval -&gt; 
+*3
+$3
+set
+$7
+testkey
+$7
+testval
+</code></pre><p><strong>为了避免额外的检查开销，写 AOF 日志的时候，不会对命令进行语义检查（不阻塞当前操作），所以日志只会记录执行成功的命令。</strong></p>
+<ul>
+<li>刚执行完还没写入日志，如果宕机就会丢失数据，并且无法恢复。</li>
+<li>执行完当前命令，写日志如果很慢，会阻塞后续操作。</li>
+</ul>
+<h3 id="appendfsync">appendfsync</h3>
+<ul>
+<li>always		同步写回，执行完命令立马写到磁盘</li>
+<li>everysec    每秒写回，先写到 AOF 文件的内存缓冲区，每秒把缓冲区中的内容写回磁盘</li>
+<li>no               由操作系统的写决定何时将缓冲区内容写回磁盘</li>
+</ul>
+<p>明显 always 最可靠，也最影响性能，every sec 可能会丢失 1s 数据，no 性能最高，最不可靠。</p>
+<p>针对 AOF 日志文件的增大、写缓慢，和故障恢复重新执行的缓慢问题，redis 提供了 AOF 重写功能，来把文件变小。</p>
+<h3 id="aof重写">AOF重写</h3>
+<p>多变一，针对同一个键值对，只存在一条命令，恢复时只执行一条命令。</p>
+<ul>
+<li>每次重写时，fork 子进程，通过共享页表来共享内存数据，逐一拷贝数据写入重写日志</li>
+<li>冲写过程中有新的操作，会写入AOF重写缓冲，如果宕机，旧的 AOF 还是全量数据，不会丢失</li>
+<li>主线程处理新的请求，会把操作写到缓冲区（AOF,AOF重写）</li>
+<li>重写期间所有数据写完，就会切换到新的 AOF 日志</li>
+<li><strong>重写过程不会阻塞主线程</strong></li>
+<li><strong>过期时间保存为绝对时间，利用 AOF恢复数据如果过期不会分配内存</strong></li>
+</ul>
+<h3 id="重写时机">重写时机</h3>
+<ul>
+<li>auto-aof-rewrite-min-size 64mb AOF 文件体量超过 64m</li>
+<li>auto-aof-rewrite-percentage 100，比上次重写后的增加的百分比</li>
+</ul>
+<p><strong>COW 过程中出现读写操作，内存页(大小，HUGO PAGE)拷贝会影响性能。</strong></p>
+<h3 id="bgrewriteaof">bgrewriteaof</h3>
+<p>异步执行AOF文件重写操作，即使 Bgrewriteaof 执行失败，也不会有任何数据丢失，旧的 AOF 文件在 bgrewriteaof 成功之前不会被修改。</p>
+<h2 id="rdb">RDB</h2>
+<p>Redis DataBase，记录某时刻的<strong>全量数据</strong>，恢复数据可以直接读入内存。</p>
+<ul>
+<li>save        主线程中执行，会阻塞</li>
+<li>bgsave    创建子进程，专门写入 RBD 文件，默认配置</li>
+</ul>
+<p>fork 创建子进程会阻塞主线程，为了避免频繁的 fork ，Redis 4.0 提出<strong>混合使用 AOF日志和内存快照</strong>的方法，<strong>aof-use-rdb-preamble</strong>，在两次快照之间，使用 AOF 日志记录这期间的所有命令操作，<strong>第二次全量快照同步的时候，就会清空 AOF 日志。</strong></p>
+<p>在AOF 重写时就直接把内存中的数据以RDB的格式写入到 aof 文件中，将增量数据以指令的方式 append 到 aof 重写的文件开头。</p>
+<p><strong>RDB + AOF 仅仅能保证数据尽量的少丢失。</strong></p>
+<h2 id="读写分离">读写分离</h2>
+<p>Redis 的主从模式，在我看来只能分摊主节点读的压力，并且从节点读取有延迟（不是双写），写入主节点后同步到从节点上去，典型的集中式架构，主节点和从节点通信量就会很大，但是 Redis 支持从节点作为中继节点，向下游的从节点同步数据来分担主节点的压力，只是最下游的从节点延迟更高。</p>
+<h3 id="主从同步">主从同步</h3>
+<p>Slaveof  ip port 、replicaof（5.0+）需要设置主库密码。<strong>masterauth</strong></p>
+<ul>
+<li>主从库建立链接、协商同步，为全量复制做准备
+<ul>
+<li>从库发送 psync 命令，表示要进行数据同步，主库根据这个命令的参数来启动复制</li>
+<li>psync 命令包含了主库的 runID 和复制进度 offset 两个参数</li>
+<li>Redis 实例启动都会自动生成一个随机 ID 用来标记实例 info server可以看到 runId</li>
+<li>首次同步 offset 为 -1</li>
+<li>主库收到 psync 命令后，会用 fullresync 响应表示第一次复制采用的全量复制，主库会把当前所有的数据都复制给从库</li>
+</ul>
+</li>
+<li>主库将所有数据同步给从库，从库收到数据后，在本地完成数据加载
+<ul>
+<li>主库执行 bgsave 生成 RDB 文件，将文件发给从库</li>
+<li>从库收到 RDB 文件后，先清空当前数据库，然后加载RDB文件，避免之前存在数据的影响</li>
+</ul>
+</li>
+<li>主库将数据同步给从库的过程中，主库不会被阻塞，仍然可以正常接受请求</li>
+<li>为了保证数据的一致性，主库会在内存中用 replication buffer 记录RDB 文件生成后收到的写操作</li>
+<li>主库最后把同步过程中的新收到的命令，再发送给从库（replication buffer 中的修改操作），从库重新执行，实现同步</li>
+</ul>
+<p>主从完成了全量复制后，会一直维护一个网络链接，主库会把之后收到的命令通过这个链接同步给从库，基于长链接的命令传播，避免频繁建立链接的开销。</p>
+<h3 id="主从断开增量复制">主从断开增量复制</h3>
+<p>主从网络断开后，主从采用<strong>增量复制</strong>的方式继续同步，通过 <strong>repl_backlog_buffer</strong> 环形缓冲区实现，有从节点存在 缓冲区就存在。</p>
+<p>主库会把断开期间的写操作命令写入 replication buffer ，同时会把这些操作命令也写入 repl_backlog_buffer 缓冲区，real_backlog_buffer ，主库会记录写到的位置，从库会记录独到的位置，各自对应的偏移量为 <strong>master_repl_offset</strong>，<strong>slave_repl_offset</strong> ，正常情况下，这两个便宜量基本相等。</p>
+<p>replication buffer 在主从增量同步时分配的 buffer，专门用来传播用户的写命令到从苦，保证主从一致，client-output-buffer-limit 可以限制 buffer 大小，超过限制，大概率是从库处理的非常慢，主库会强制断开这个链接，主从复制被中断，如果从库再次发起复制请求，可能会因此恶行循环。</p>
+<p>client-output-buffer-limit normal 0 0 0
+client-output-buffer-limit replica 256mb 64mb 60
+client-output-buffer-limit pubsub 32mb 8mb 60</p>
+<p><strong>恢复链接</strong>后，从库会先给主库发送 psync 命令，把自己当前的 slave_repl_offset 发给主库，主库判断自己的 master_repl_offset 和 slave_repl_offset 之间的差距，主库会收到新的写操作命令也就是   master_repl_offset 和 slave_repl_offset 之间的命令操作同步给从库就行。</p>
+<p>由于是环形缓冲区，<strong>从库写入太慢，就会导致从库未读的数据被覆盖，最终数据不一致</strong>，<strong>从节点断开时间太长导致数据被覆盖会进行全量复制</strong>。</p>
+<p>看情况调整 <strong>repl_backlog_size</strong> 缓冲区的大小，同时要考虑一些突发的请求压力场景来降低增量复制中数据不一致的风险。</p>
+<h3 id="repl-diskless-sync">repl-diskless-sync</h3>
+<p>复制同步策略，disk/diskless</p>
+<ul>
+<li>DUMP RDB 到硬盘，在读到内存，在发送给slave</li>
+<li>Socket 传输到从节点的进程中</li>
+</ul>
+<p>repl-diskless-sync-delay  配置等待时间，让更多的从节点到达，减少主节点阻塞时间。</p>
+<blockquote>
+<p><a href="https://redis.io/topics/replication">https://redis.io/topics/replication</a></p>
+</blockquote>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://liguangchang.cn/tags/redis/">redis</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        4326 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2022-01-04 21:56
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+    <div class="pagination">
+        
+        <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+        </div>
+        
+
+        <div class="pagination__buttons">
+            
+            <span class="button previous">
+                <a href="https://liguangchang.cn/posts/distributed/consistency-hash/">
+                    <span class="button__icon">←</span>
+                    <span class="button__text">Consistency Hash</span>
+                </a>
+            </span>
+            
+
+            
+            <span class="button next">
+                <a href="https://liguangchang.cn/posts/java/class-load/">
+                    <span class="button__text">Class load</span>
+                    <span class="button__icon">→</span>
+                </a>
+            </span>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            
+            
+            
+            
+            <span>Powered by Hugo · hello-friend-ng</span>
+        </div>
+    </div>
+    
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span> &#183; <a href="https://beian.miit.gov.cn">京ICP备2020035531号-2</a> &#183; <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41012202000328" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"></span>
+        </div>
+    </div>
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2d3d449fc0ff117f00ac91342a8f76cd5b710411d7a0254dbe75da3234d2f685d6a0c44cff60c414e90b6a149da8e4032c713c25e4e6838e2e3918dc0ad2e81c.js" integrity="sha512-LT1En8D/EX8ArJE0Ko92zVtxBBHXoCVNvnXaMjTS9oXWoMRM/2DEFOkLahSdqOQDLHE8JeTmg44uORjcCtLoHA=="></script>
+
+
+
+    </body>
+</html>

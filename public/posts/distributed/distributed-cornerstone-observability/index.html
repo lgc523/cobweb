@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="lgc523 ">
+<meta name="description" content="分布式的基石 &amp;mdash; 可观测性 可观测性(Observability) 和可控制性(Controllability) 是由匈牙利数学家 Rudolf E·Kålmån 针" />
+<meta name="keywords" content=", distributed" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://liguangchang.cn/posts/distributed/distributed-cornerstone-observability/" />
+
+
+    <title>
+        
+            Metrics、Tracing、 Logging :: 互联网没一个好东西 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.4e5c639214707eff609bb55fe49e183dee42258a73bc90e4cc7b0a84f900798a.css">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Metrics、Tracing、 Logging">
+<meta itemprop="description" content="分布式的基石 &mdash; 可观测性 可观测性(Observability) 和可控制性(Controllability) 是由匈牙利数学家 Rudolf E·Kålmån 针"><meta itemprop="datePublished" content="2022-02-10T00:04:10+08:00" />
+<meta itemprop="dateModified" content="2022-02-10T00:04:10+08:00" />
+<meta itemprop="wordCount" content="1385">
+<meta itemprop="keywords" content="distributed," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Metrics、Tracing、 Logging"/>
+<meta name="twitter:description" content="分布式的基石 &mdash; 可观测性 可观测性(Observability) 和可控制性(Controllability) 是由匈牙利数学家 Rudolf E·Kålmån 针"/>
+
+
+
+
+    <meta property="og:title" content="Metrics、Tracing、 Logging" />
+<meta property="og:description" content="分布式的基石 &mdash; 可观测性 可观测性(Observability) 和可控制性(Controllability) 是由匈牙利数学家 Rudolf E·Kålmån 针" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://liguangchang.cn/posts/distributed/distributed-cornerstone-observability/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-02-10T00:04:10+08:00" />
+<meta property="article:modified_time" content="2022-02-10T00:04:10+08:00" /><meta property="og:site_name" content="互联网没一个好东西" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2022-02-10 00:04:10 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ 无需执妄为真 则自在无碍</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#1b1c1d;
+                   animation-duration:5s;">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">|</a></li><li><a href="/posts">post</a></li><li><a href="/about">about</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+                <span class="theme-toggle not-selectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+   <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+   3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+   13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+ </svg></span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        3 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://liguangchang.cn/posts/distributed/distributed-cornerstone-observability/">Metrics、Tracing、 Logging</a>
+      </h1>
+
+      
+
+      
+        <hr />
+        <aside id="toc">
+          <div class="toc-title">Table of Contents</div>
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#分布式的基石-----可观测性">分布式的基石 &mdash; 可观测性</a></li>
+    <li><a href="#logging">logging</a>
+      <ul>
+        <li><a href="#事件日志">事件日志</a></li>
+        <li><a href="#收集缓冲加工聚合存储查询">收集缓冲、加工聚合、存储查询</a></li>
+      </ul>
+    </li>
+    <li><a href="#tracing">tracing</a>
+      <ul>
+        <li><a href="#追踪与跨度">追踪与跨度</a></li>
+        <li><a href="#数据收集">数据收集</a></li>
+        <li><a href="#追踪规范化">追踪规范化</a></li>
+      </ul>
+    </li>
+    <li><a href="#metrics">metrics</a></li>
+    <li><a href="#heading"></a></li>
+  </ul>
+</nav>
+        </aside>
+        <hr />
+
+      
+
+      <div class="post-content">
+        <h2 id="分布式的基石-----可观测性">分布式的基石 &mdash; 可观测性</h2>
+<p>可观测性(Observability) 和可控制性(Controllability) 是由匈牙利数学家 Rudolf E·Kålmån 针对线性动态控制系统提出的一组对偶属性，原本的含义是 <strong>可以由其外部输出推断其内部状态的程度</strong>。</p>
+<blockquote>
+<p>Peter Bourgon <strong>metric-tracing-and-logging</strong></p>
+<p><a href="https://peter.bourgon.org/blog/2017/02/21/metrics-tracing-and-logging.html">https://peter.bourgon.org/blog/2017/02/21/metrics-tracing-and-logging.html</a></p>
+</blockquote>
+<p><img src="https://s2.loli.net/2022/02/10/8NBKUCrGp6aIjiM.png" alt="metrics-tracing-logging"></p>
+<h2 id="logging">logging</h2>
+<p>日志的职责是<strong>记录系统运行期间发生过的离散事件</strong>，通过记录<strong>分析程序行为</strong>。</p>
+<h3 id="事件日志">事件日志</h3>
+<p>日志应该做到像流水账一样，格式统一，内容恰当，没有遗漏，日志内容不该出现的内容不要有，该有的不少。</p>
+<ul>
+<li><strong>避免打印敏感信息</strong></li>
+<li><strong>避免引用慢操作</strong>
+<ul>
+<li>关注测试调试数据和实际生产数据的差别</li>
+</ul>
+</li>
+<li><strong>避免打印追踪诊断信息</strong>
+<ul>
+<li>不要打印方法输入参数、输出结果、方法执行时长的调试信息</li>
+</ul>
+</li>
+<li><strong>避免误导他人</strong>
+<ul>
+<li>异常处理后不要打印堆栈</li>
+</ul>
+</li>
+<li><strong>请求携带 TraceId</strong>
+<ul>
+<li>请求应该必须始终附带 TraceId (随请求响应返回到客户端)，如果出现异常，能够快读找到与问题相关的日志。</li>
+</ul>
+</li>
+<li><strong>系统运行过程中的关键事件</strong></li>
+<li><strong>启动时输出配置信息</strong>
+<ul>
+<li>系统启动时或检测到配置更新，应将非敏感的配置信息输出</li>
+<li>连接的数据库、临时目录路径</li>
+<li>针对只执行一次或者少次的逻辑</li>
+</ul>
+</li>
+</ul>
+<h3 id="收集缓冲加工聚合存储查询">收集缓冲、加工聚合、存储查询</h3>
+<p>涉及到 Kafka、es、logstash、beats。</p>
+<p>加工聚合的方案中 依赖 es 的实时聚合统计用于 <strong>即席查询</strong>，另外通过 logstash 中的聚合插件在收集日志后自动生成某些常用的、固定的聚合指标用于<strong>固定查询</strong>。</p>
+<p>日志数据随着时间的推移会逐渐失去价值，可以区分出冷数据和热数据，进而采用不同的硬件策略存储。</p>
+<h2 id="tracing">tracing</h2>
+<p>单体系统追踪的范畴基本只局限于栈追踪，微服务追踪调用轨迹跨越多个服务，追踪包括服务间网络传输和服务内部的调用堆栈信息。</p>
+<p>追踪的目的主要是<strong>排查故障</strong>，分析调用链的哪一部分、哪个方法出现错误或阻塞，输入和输出是否符合预期。</p>
+<blockquote>
+<p><a href="https://storage.googleapis.com/pub-tools-public-publication-data/pdf/36356.pdf">https://storage.googleapis.com/pub-tools-public-publication-data/pdf/36356.pdf</a></p>
+<p><strong>Dapper, a Large-Scale Distributed Systems Tracing Infrastructure</strong></p>
+</blockquote>
+<p>2010 年 Google 发表的论文提出了 <strong>追踪(Traec)</strong> 与 **跨度(Span)**概念来进行有效的分布式追踪。</p>
+<h3 id="追踪与跨度">追踪与跨度</h3>
+<p>从客户端发起请求抵达系统的边界开始，记录请求流经的每一个服务，<strong>直到向客户端返回响应为止</strong>，整个过程就称为一次<strong>追踪</strong>。</p>
+<p>每次开始调用服务前都需要先埋入一个调用记录，这个记录称为一个<strong>跨度</strong>，Span 的数据结构应足够简洁、完备。</p>
+<p>每一次 Trace 实际上都是由若干个<strong>有顺序、有层级关系</strong>的 Span 组成的一棵<strong>追踪树</strong>。</p>
+<p><img src="https://s2.loli.net/2022/02/11/c68MnvQBfKT37is.png" alt="trace-tree"></p>
+<p><strong>微服务可能是异构语言、协议来进行交互，所以追踪系统需要增加功能应对多种语言和协议。</strong></p>
+<ul>
+<li><strong>低性能损耗</strong>
+<ul>
+<li>越慢的服务越需要追踪，不能对服务本身产生明显的性能负担</li>
+</ul>
+</li>
+<li><strong>对应用透明</strong>
+<ul>
+<li>尽量以非侵入或者少侵入的方式来实现追踪</li>
+</ul>
+</li>
+<li><strong>随应用扩缩</strong>
+<ul>
+<li>追踪系统跟随系统扩缩</li>
+</ul>
+</li>
+<li><strong>持续的监控</strong>
+<ul>
+<li>持续监控，防止偶尔的抖动</li>
+</ul>
+</li>
+</ul>
+<h3 id="数据收集">数据收集</h3>
+<p>追踪系统根据数据收集方式的差异，可分为三种主流的实现方式。</p>
+<ul>
+<li><strong>基于日志的追踪 Log-Based Tracing</strong>
+<ul>
+<li>将 Trace、Span 等信息直接输出到日志中</li>
+<li>所有节点的日志归集到一起</li>
+<li>从全局日志中反推出完整的调用链拓扑关系</li>
+<li>对应用侵入和性能影响都较低，但是依赖日志归集过程，不够精准，可能会出现延迟和缺失</li>
+<li>代表的有 Spring Cloud Sleuth，SofaTracing</li>
+</ul>
+</li>
+<li><strong>基于服务的追踪 Service-Based Tracing</strong>
+<ul>
+<li>通过给目标应用注入追踪探针</li>
+<li>从目标系统中监控到的服务调用信息，通过请求发送给追踪系统</li>
+<li>消耗资源较多，侵入更多，但是追踪精较确、精准</li>
+</ul>
+</li>
+<li><strong>基于边车代理的追踪 Sidecar-Based Tracing</strong>
+<ul>
+<li>Service mesh 专属方案，目前最理想的方案，Envoy</li>
+<li>对应用透明，了解到的大概是承接了网络流量进行处理，<strong>但是只能实现服务调用层面的追踪</strong></li>
+<li>通过控制平面上报，保证了最佳的精确性</li>
+</ul>
+</li>
+</ul>
+<h3 id="追踪规范化">追踪规范化</h3>
+<p>OpenTelemetry</p>
+<h2 id="metrics">metrics</h2>
+<p>度量是指<strong>对系统中某一类信息的统计聚合</strong>，主要目的是<strong>监控</strong>和<strong>预警</strong>，<strong>在度量的指标达到风险阈值时触发事件</strong>。</p>
+<h2 id="heading"></h2>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://liguangchang.cn/tags/distributed/">distributed</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        1385 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2022-02-10 00:04
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+    <div class="pagination">
+        
+        <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+        </div>
+        
+
+        <div class="pagination__buttons">
+            
+            <span class="button previous">
+                <a href="https://liguangchang.cn/posts/go/go-map/">
+                    <span class="button__icon">←</span>
+                    <span class="button__text">Go Map</span>
+                </a>
+            </span>
+            
+
+            
+            <span class="button next">
+                <a href="https://liguangchang.cn/posts/go/go-slice/">
+                    <span class="button__text">Go Slice</span>
+                    <span class="button__icon">→</span>
+                </a>
+            </span>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            
+            
+            
+            
+            <span>Powered by Hugo · hello-friend-ng</span>
+        </div>
+    </div>
+    
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span> &#183; <a href="https://beian.miit.gov.cn">京ICP备2020035531号-2</a> &#183; <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41012202000328" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"></span>
+        </div>
+    </div>
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2d3d449fc0ff117f00ac91342a8f76cd5b710411d7a0254dbe75da3234d2f685d6a0c44cff60c414e90b6a149da8e4032c713c25e4e6838e2e3918dc0ad2e81c.js" integrity="sha512-LT1En8D/EX8ArJE0Ko92zVtxBBHXoCVNvnXaMjTS9oXWoMRM/2DEFOkLahSdqOQDLHE8JeTmg44uORjcCtLoHA=="></script>
+
+
+
+    </body>
+</html>

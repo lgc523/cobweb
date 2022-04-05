@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="lgc523 ">
+<meta name="description" content="主从模式下的高可用，通过哨兵机制来保证，哨兵机制可以实现主从库的自动切换，解决主从复制模式下的故障转移，主要任务是 监控、选主、通知。 哨兵是一" />
+<meta name="keywords" content=", redis" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://liguangchang.cn/posts/redis/redis-sentinel-cluster/" />
+
+
+    <title>
+        
+            Redis Sentinel Cluster :: 互联网没一个好东西 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.4e5c639214707eff609bb55fe49e183dee42258a73bc90e4cc7b0a84f900798a.css">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Redis Sentinel Cluster">
+<meta itemprop="description" content="主从模式下的高可用，通过哨兵机制来保证，哨兵机制可以实现主从库的自动切换，解决主从复制模式下的故障转移，主要任务是 监控、选主、通知。 哨兵是一"><meta itemprop="datePublished" content="2022-01-10T01:11:11+08:00" />
+<meta itemprop="dateModified" content="2022-01-10T01:11:11+08:00" />
+<meta itemprop="wordCount" content="2101">
+<meta itemprop="keywords" content="redis," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Redis Sentinel Cluster"/>
+<meta name="twitter:description" content="主从模式下的高可用，通过哨兵机制来保证，哨兵机制可以实现主从库的自动切换，解决主从复制模式下的故障转移，主要任务是 监控、选主、通知。 哨兵是一"/>
+
+
+
+
+    <meta property="og:title" content="Redis Sentinel Cluster" />
+<meta property="og:description" content="主从模式下的高可用，通过哨兵机制来保证，哨兵机制可以实现主从库的自动切换，解决主从复制模式下的故障转移，主要任务是 监控、选主、通知。 哨兵是一" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://liguangchang.cn/posts/redis/redis-sentinel-cluster/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-01-10T01:11:11+08:00" />
+<meta property="article:modified_time" content="2022-01-10T01:11:11+08:00" /><meta property="og:site_name" content="互联网没一个好东西" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2022-01-10 01:11:11 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ 无需执妄为真 则自在无碍</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#1b1c1d;
+                   animation-duration:5s;">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">|</a></li><li><a href="/posts">post</a></li><li><a href="/about">about</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+                <span class="theme-toggle not-selectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+   <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+   3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+   13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+ </svg></span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        5 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://liguangchang.cn/posts/redis/redis-sentinel-cluster/">Redis Sentinel Cluster</a>
+      </h1>
+
+      
+
+      
+        <hr />
+        <aside id="toc">
+          <div class="toc-title">Table of Contents</div>
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#监控">监控</a>
+      <ul>
+        <li><a href="#主观下线">主观下线</a></li>
+        <li><a href="#客观下线">客观下线</a></li>
+      </ul>
+    </li>
+    <li><a href="#选主">选主</a></li>
+    <li><a href="#通知">通知</a></li>
+    <li><a href="#选主过程中的写入">选主过程中的写入</a></li>
+    <li><a href="#pubsub-哨兵集群">pub/sub 哨兵集群</a></li>
+    <li><a href="#客户端通知">客户端通知</a></li>
+    <li><a href="#切换关键事件">切换关键事件</a></li>
+    <li><a href="#由哪一个哨兵执行切换">由哪一个哨兵执行切换</a></li>
+    <li><a href="#总结">总结</a></li>
+    <li><a href="#q">Q</a></li>
+    <li><a href="#切片集群">切片集群</a></li>
+  </ul>
+</nav>
+        </aside>
+        <hr />
+
+      
+
+      <div class="post-content">
+        <p>主从模式下的高可用，通过哨兵机制来保证，哨兵机制可以实现主从库的自动切换，解决主从复制模式下的故障转移，主要任务是 <strong>监控、选主、通知</strong>。</p>
+<p>哨兵是一个运行在特殊模式下的一个 Redis 进程，可以看作一个 sidercar。</p>
+<h2 id="监控">监控</h2>
+<p>哨兵进程运行时，周期性的给所有的主从库发送 PING 命令，检测它们是否仍然在线运行。</p>
+<p>如果没有在周期规定时间内响应哨兵的 PING 命令，哨兵就会标记为 <strong>下线状态</strong>，主节点没有正常响应，就会开始切换主库的流程。</p>
+<h3 id="主观下线">主观下线</h3>
+<p>哨兵发现主库响应超时，哨兵会对它标记为 &ldquo;主观下线&rdquo;，集中式架构下的主节点不能轻易的变换。如果发现从库下线就直接下线，从库的下线一半影响不大，集群对外的服务不会间断。</p>
+<p>如果哨兵误判主节点下线，后续的选主和通知的开销都是没必要的，误判一般发生在集群网络压力较大、网络拥塞，或者主库本身压力较大的情况下。</p>
+<p>多个哨兵实例一起来判断，避免单个实例由于一些特殊原因误判主节点下线，来提供容错，降低风险。</p>
+<h3 id="客观下线">客观下线</h3>
+<p>存在 N 个哨兵时，有 N/2 + 1个实例判断主库主观下线，采用少数服从多数的原则，来认定主节点 “客观下线”，开始选主。</p>
+<h2 id="选主">选主</h2>
+<p>判定主节点确实下线了之后，就从从库中选出来一个从库实例作为主库。</p>
+<p>从节点选主通过对从节点筛选和打分的规则，来选出一个从库作为主库。</p>
+<ul>
+<li>
+<p>筛选</p>
+</li>
+<li>
+<p>检查从库的当前在线状态，还要判断之前的网络链接状态，断连次数超过一定的阈值，就认定该从库网络状态不好，过滤掉，可以认为不足以作为主节点 （candidate）。</p>
+<p>down-after-milliseconds 认定主从库断连的最大连接超时时间，断连超过10次，就说明这个从库网络状况不好，不适合作为 主节点（candidate）。</p>
+</li>
+<li>
+<p>三轮打分（从库优先级、从库复制进度、从库 ID 号）</p>
+<ol>
+<li>slave-priority 可根据从库的实际情况（规格、数据量、压力）来设置优先级，优先级最高的从库得分高。</li>
+<li>和旧库同步程度最接近的从库得分高，保证新主库的数据最新。slave_repl_offset 最接近 master_repl_offset，从库同步进度一样，就需要第三轮打分。</li>
+<li>ID号小的从库得分高（优先级和复制进度都相同的情况下），表明该从节点连接较早且稳定。</li>
+</ol>
+</li>
+</ul>
+<h2 id="通知">通知</h2>
+<p>主节点切换后，哨兵需要把新主库的链接信息发送给其他从库，让它们执行 replicaof 命令，和新主库建立链接，并进行数据复制，同时哨兵会把新主库的链接信息通知给客户端，让它们把请求操作发送到新主库上。</p>
+<h2 id="选主过程中的写入">选主过程中的写入</h2>
+<p>在选主过程中，<strong>新的写入会失败</strong>，<strong>业务端无感知需要先将失败的请求缓存或写入MQ，等选完主后，在将这些操作写入</strong>，主从切换时间过长，会导致客户端或MQ 写入请求过多，切换完重放请求时间过长。</p>
+<p>down-after-milliseconds 可以让哨兵对主从切换敏感，切换及时对业务影响最小，但是可能会因为网络的抖动导致不必要的切换。配置的时间太长，可以减少哨兵误判的概率，但是在真正发生故障时，业务的写失败会比较久，缓存写入 请求数据量越多。</p>
+<h2 id="pubsub-哨兵集群">pub/sub 哨兵集群</h2>
+<p>哨兵实例之间的互相发现通过 pub/sub 机制实现，哨兵和主库建立了连接，就可以在主库上发布消息，同时也可以从主库上订阅消息，获得其他哨兵的连接信息，多个哨兵都在主库上做了发布订阅操作后，哨兵实例之间就能够知道彼此之间的 IP 地址和端口。</p>
+<p>主从集群中的主库 &lt;<strong>sentinel</strong>:hello&gt; 频道，哨兵通过它来通信实现互相发现，然后建立网络连接，哨兵通过<strong>向主库发送 INFO 命令获取从库列表</strong>，哨兵在和每个从库建立连接，并在建立的连接上持续地对从库进行监控。</p>
+<h2 id="客户端通知">客户端通知</h2>
+<p>主从切换后，客户端需要知道新的主库信息，<strong>redis 通过事件让客户端知道哨兵工作过程中节点之间的变更事件</strong>，哨兵实例也提供 pub/sub 机制，客户端可以从哨兵订阅消息，消息订阅频道对应不同切换过程中的不同关键事件。</p>
+<h2 id="切换关键事件">切换关键事件</h2>
+<ul>
+<li>主库下线事件
+<ul>
+<li>+sdown  实例进入 主观下线</li>
+<li>-sdown   实例退出 主观下线</li>
+<li>+odown  实例进入 客观下线</li>
+<li>-odown   实例退出 客观下线</li>
+</ul>
+</li>
+<li>从库重新配置事件
+<ul>
+<li>+slave-reconf-sent      哨兵发送 slaveof 命令冲洗配置从库</li>
+<li>+slave-reconf-inprog  从库配置了新主库，但尚未进行同步</li>
+<li>+slave-reconf-done     从库配置了新主库，并且和新主库完成同步</li>
+</ul>
+</li>
+<li>新主库切换
+<ul>
+<li>+switch-master 主库地址发生变化</li>
+</ul>
+</li>
+</ul>
+<h2 id="由哪一个哨兵执行切换">由哪一个哨兵执行切换</h2>
+<p>任何一个实例判断出主库 “客观下线“ 后，就会给其他实例发送 ‘<strong>is-master-down-by-addr</strong>&rsquo; 命令，其他实例会根据自己和主库的连接情况，作出 Y/N 响应。</p>
+<p>quorum 可以配置获得投票数，也就是能够判定主库 &ldquo;客观下线&quot;的实例个数**。？如果增加实例个数，这个配置怎么更新？**</p>
+<p>投票过程中，<strong>想要成为 leader 的哨兵实例需要获得到半数以上的投票 并且 获得票数要大于等于哨兵配置文件中的 quorum 值</strong>。</p>
+<p>获得的票数没有满足条件，将继续进行投票，<strong>如果哨兵集群只有两个实例，要想成为 leader 必须获得 2 票</strong>。</p>
+<p>哨兵对主库在线检测状态属于时间事件，使用定时器来完成，每个哨兵的定时器会在执行周期上加上一个小小的随机时间偏移，来错开多实例同时检测到主节点下线的时间，减少投票轮数，无法选出 leader，会等待 failover_timeout * 2 时间，进行下一轮投票。</p>
+<p>一轮只投一票，这很 raft。</p>
+<h2 id="总结">总结</h2>
+<ul>
+<li>
+<p>基于 pub/sub 机制的组成哨兵集群</p>
+</li>
+<li>
+<p>基于 INFO 命令的从库列表，帮助哨兵和从库建立连接</p>
+</li>
+<li>
+<p>基于哨兵自身的 pub/sub 功能，实现了客户端和哨兵之间的事件通知</p>
+</li>
+</ul>
+<p><strong>要保证所有哨兵实例的配置是一致的，尤其是主观下线的判断 down-after-milliseconds</strong>。</p>
+<h2 id="q">Q</h2>
+<p><strong>？如果增加哨兵实例个数，这个配置怎么更新？</strong></p>
+<h2 id="切片集群">切片集群</h2>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://liguangchang.cn/tags/redis/">redis</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        2101 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2022-01-10 01:11
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+    <div class="pagination">
+        
+        <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+        </div>
+        
+
+        <div class="pagination__buttons">
+            
+            <span class="button previous">
+                <a href="https://liguangchang.cn/posts/redis/redis-sds/">
+                    <span class="button__icon">←</span>
+                    <span class="button__text">Redis Sds</span>
+                </a>
+            </span>
+            
+
+            
+            <span class="button next">
+                <a href="https://liguangchang.cn/posts/java/optimizing-java/">
+                    <span class="button__text">Optimizing Java</span>
+                    <span class="button__icon">→</span>
+                </a>
+            </span>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            
+            
+            
+            
+            <span>Powered by Hugo · hello-friend-ng</span>
+        </div>
+    </div>
+    
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span> &#183; <a href="https://beian.miit.gov.cn">京ICP备2020035531号-2</a> &#183; <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41012202000328" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"></span>
+        </div>
+    </div>
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2d3d449fc0ff117f00ac91342a8f76cd5b710411d7a0254dbe75da3234d2f685d6a0c44cff60c414e90b6a149da8e4032c713c25e4e6838e2e3918dc0ad2e81c.js" integrity="sha512-LT1En8D/EX8ArJE0Ko92zVtxBBHXoCVNvnXaMjTS9oXWoMRM/2DEFOkLahSdqOQDLHE8JeTmg44uORjcCtLoHA=="></script>
+
+
+
+    </body>
+</html>

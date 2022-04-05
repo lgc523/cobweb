@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>transaction on 互联网没一个好东西</title>
+    <link>https://liguangchang.cn/tags/transaction/</link>
+    <description>Recent content in transaction on 互联网没一个好东西</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 17 Oct 2021 23:41:03 +0800</lastBuildDate><atom:link href="https://liguangchang.cn/tags/transaction/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Transaction-2PC,3PC,BASE</title>
+      <link>https://liguangchang.cn/posts/distributed/distributed-transaction/</link>
+      <pubDate>Sun, 17 Oct 2021 23:41:03 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/distributed/distributed-transaction/</guid>
+      <description>事务 Transaction ，一种机制，将包含一系列操作的工作序列纳入到一个不可分隔的执行单元，只有把操作均被正确执行才能提交事务，任意一个操作失败都会导致整个事</description>
+    </item>
+    
+  </channel>
+</rss>

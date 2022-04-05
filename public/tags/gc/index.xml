@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>gc on 互联网没一个好东西</title>
+    <link>https://liguangchang.cn/tags/gc/</link>
+    <description>Recent content in gc on 互联网没一个好东西</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 16 Nov 2021 21:53:06 +0800</lastBuildDate><atom:link href="https://liguangchang.cn/tags/gc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Reference Counting</title>
+      <link>https://liguangchang.cn/posts/gc/reference_counting/</link>
+      <pubDate>Tue, 16 Nov 2021 21:53:06 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/gc/reference_counting/</guid>
+      <description>GC本来就是一种释放怎么都无法被引用的对象的机制，1960 年George E·Collins 提出。 count 计数器是无符号的整数，用于计数的位数根据算</description>
+    </item>
+    
+    <item>
+      <title>Mark Sweep GC</title>
+      <link>https://liguangchang.cn/posts/gc/mark_sweep/</link>
+      <pubDate>Mon, 15 Nov 2021 23:10:47 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/gc/mark_sweep/</guid>
+      <description>标记清楚算法由标记阶段和清除阶段 标记阶段把所有活动对象打上标记 清除阶段把没有标记的对象回收 mark phase 首先标记根直接引用的对象（在内存中存活的对象）</description>
+    </item>
+    
+    <item>
+      <title>Garbage Collection</title>
+      <link>https://liguangchang.cn/posts/gc/garbage_collection/</link>
+      <pubDate>Mon, 15 Nov 2021 21:57:17 +0800</pubDate>
+      
+      <guid>https://liguangchang.cn/posts/gc/garbage_collection/</guid>
+      <description>1960年，McCarthy 在其论文中首次发布了GC算法，标记清除算法，Mark Sweep GC。 GC要做的事情 找到内存中的垃圾 回收垃圾，使得内存可以</description>
+    </item>
+    
+  </channel>
+</rss>

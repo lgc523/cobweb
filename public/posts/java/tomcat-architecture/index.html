@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="lgc523 ">
+<meta name="description" content="基于 Java 语言的轻量级应用服务器，完全开源免费的 Servlet 容器实现，最初由 sun 公司开发（JavaWebServer），作为 Servlet 容器的参考实现，1999 年与 JServe" />
+<meta name="keywords" content=", java" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://liguangchang.cn/posts/java/tomcat-architecture/" />
+
+
+    <title>
+        
+            Tomcat Architechure :: 互联网没一个好东西 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.4e5c639214707eff609bb55fe49e183dee42258a73bc90e4cc7b0a84f900798a.css">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Tomcat Architechure">
+<meta itemprop="description" content="基于 Java 语言的轻量级应用服务器，完全开源免费的 Servlet 容器实现，最初由 sun 公司开发（JavaWebServer），作为 Servlet 容器的参考实现，1999 年与 JServe"><meta itemprop="datePublished" content="2022-01-24T23:00:06+08:00" />
+<meta itemprop="dateModified" content="2022-01-24T23:00:06+08:00" />
+<meta itemprop="wordCount" content="1243">
+<meta itemprop="keywords" content="java," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Tomcat Architechure"/>
+<meta name="twitter:description" content="基于 Java 语言的轻量级应用服务器，完全开源免费的 Servlet 容器实现，最初由 sun 公司开发（JavaWebServer），作为 Servlet 容器的参考实现，1999 年与 JServe"/>
+
+
+
+
+    <meta property="og:title" content="Tomcat Architechure" />
+<meta property="og:description" content="基于 Java 语言的轻量级应用服务器，完全开源免费的 Servlet 容器实现，最初由 sun 公司开发（JavaWebServer），作为 Servlet 容器的参考实现，1999 年与 JServe" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://liguangchang.cn/posts/java/tomcat-architecture/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-01-24T23:00:06+08:00" />
+<meta property="article:modified_time" content="2022-01-24T23:00:06+08:00" /><meta property="og:site_name" content="互联网没一个好东西" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2022-01-24 23:00:06 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ 无需执妄为真 则自在无碍</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#1b1c1d;
+                   animation-duration:5s;">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">|</a></li><li><a href="/posts">post</a></li><li><a href="/about">about</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+                <span class="theme-toggle not-selectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+   <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+   3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+   13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+ </svg></span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        3 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://liguangchang.cn/posts/java/tomcat-architecture/">Tomcat Architechure</a>
+      </h1>
+
+      
+
+      
+        <hr />
+        <aside id="toc">
+          <div class="toc-title">Table of Contents</div>
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#85-feat">8.5 feat</a></li>
+    <li><a href="#设计">设计</a>
+      <ul>
+        <li><a href="#10">1.0</a></li>
+        <li><a href="#20">2.0</a></li>
+        <li><a href="#30">3.0</a></li>
+        <li><a href="#40">4.0</a></li>
+        <li><a href="#50">5.0</a></li>
+        <li><a href="#60">6.0</a></li>
+        <li><a href="#70">7.0</a></li>
+        <li><a href="#后台处理">后台处理</a></li>
+      </ul>
+    </li>
+    <li><a href="#lifecycle">Lifecycle</a></li>
+  </ul>
+</nav>
+        </aside>
+        <hr />
+
+      
+
+      <div class="post-content">
+        <p>基于 Java 语言的轻量级<strong>应用服务器</strong>，完全开源免费的 Servlet 容器实现，最初由 sun 公司开发（JavaWebServer），作为 Servlet 容器的参考实现，1999 年与 JServe （Apache）项目合并为 Tomcat，以 Apache License 许可发布。</p>
+<blockquote>
+<p>微服务架构 <a href="https://martinfowler.com/articles/microservices.html">https://martinfowler.com/articles/microservices.html</a></p>
+</blockquote>
+<blockquote>
+<p>十二要素应用（构建 SAAS APP 方法论）https://12factor.net/</p>
+</blockquote>
+<blockquote>
+<p>JPDA （Java Platform Debugger Architecture） <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jpda/architecture.html">https://docs.oracle.com/javase/8/docs/technotes/guides/jpda/architecture.html</a></p>
+</blockquote>
+<h2 id="85-feat">8.5 feat</h2>
+<ul>
+<li>Servlet 3.1，JSP2.3，EL3.0，WebSocket1.1，Servlet4.0(9.0)</li>
+<li>Servlet4Preview</li>
+<li>8.0 默认 HTTP、AJP 链接器采用 NIO，8.5 移除了 BIO 的支持</li>
+<li>新的资源实现，采用单独、一致的方法配置 Web 应用的附加资源，可以用于实现覆盖，eg: 将一个 WAR 作为多个 Web 应用的基础，同时 Web 应用拥有自己的定制功能。</li>
+<li>8.0 链接器新增支持 JDK7 的 NIO2，HTTP/2</li>
+<li>默认采用异步日志处理</li>
+</ul>
+<h2 id="设计">设计</h2>
+<h3 id="10">1.0</h3>
+<ol>
+<li>接受、解析请求，处理，返回响应</li>
+<li>socket  监听指定端口</li>
+</ol>
+<h3 id="20">2.0</h3>
+<ol>
+<li><strong>Connector，Container 将请求监听和请求处理分离</strong>，应对多种网络协议（HTTP，AJP）</li>
+<li>Connector 负责开启 socket 监听客户端请求，返回响应数据</li>
+<li>Container 负责具体的请求处理</li>
+<li>二者分别拥有自己的 start()，stop() 方法来释放维护的资源</li>
+<li><strong>一个 server 可以包含多个 Connector，Container</strong></li>
+</ol>
+<p><img src="https://s2.loli.net/2022/01/25/lMJSHQafgvuox6E.png" alt="tomcat-server"></p>
+<h3 id="30">3.0</h3>
+<p>一个 server 包含多个 service （互相独立，共享一个 JVM 以及系统类库）</p>
+<p><strong>一个 service 负责维护（mapping）多个 container 和 一个 container</strong> ,这样来自 connector 的请求只能由它所属 service 维护的 container 处理。</p>
+<p><img src="https://s2.loli.net/2022/01/25/SAce4noDp8PIJHC.png" alt="container-engine"></p>
+<h3 id="40">4.0</h3>
+<p>Engine （整个 servlet 引擎），<strong>负责请求的处理，不需要考虑请求链接、协议等的处理</strong>。</p>
+<p><strong>应用服务器是一个运行环境</strong>，需要在 Engine 容器中支持管理 Web 应用，接收到 Connector 的处理请求时，Engine 容器能够找到一个合适的 Web 应用来处理。</p>
+<p>context 表示一个 web 应用，一个 engine 可以包含多个 context。</p>
+<p><img src="https://s2.loli.net/2022/01/25/Ma1QPcoVsxLWmSq.png" alt="container-context"></p>
+<p>每个组件通过 start()，stop() 方法在启动时加载资源和停止时释放资源，使得组件充分解耦，提高服务器的可拓展性和可维护性。</p>
+<h3 id="50">5.0</h3>
+<p>如果<strong>一个服务实例要对多个域名提供服务</strong>，可以将每个域名视为一个<strong>虚拟</strong>的主机，每个虚拟主机下包含多个 web 应用。</p>
+<p>Host 表示虚拟主机，一个 Host 可以包含多个 context。</p>
+<p><img src="https://s2.loli.net/2022/01/25/8IM9kb4Hcd5uTwj.png" alt="container-host"></p>
+<h3 id="60">6.0</h3>
+<p>Servlet 规范中一个 Web 应用中可以包含多个 Servlet 实例处理不同链接的请求，需要一个组件的概念来表示 Servlet 定义，Tomcat 中 Servlet 定义被称为 Wrapper。</p>
+<p><img src="https://s2.loli.net/2022/01/25/WaZrNIB4FT9A3HV.png" alt="container-wrapper"></p>
+<h3 id="70">7.0</h3>
+<p>Engine，context 组件的作用就是处理接受客户端的请求并返回数据，具体操作可能会委派到子组件完成。</p>
+<p>使用 container 表示容器，container 可以添加并维护子容器，Engine，Host，Context，Wrapper 均继承自 Container。</p>
+<p>嵌入式方式启动 Tomcat ,运行简单的请求处理，不必支持多 Web 场景，可以只在 Service 中维护一个简化版的 Engine。</p>
+<p>默认实现。</p>
+<p><img src="https://s2.loli.net/2022/01/25/FNUAHyYm4nL1Jci.png" alt="tomcat-container"></p>
+<h3 id="后台处理">后台处理</h3>
+<p>很多情况下，container 需要执行一些异步处理，而且是定期执行（web 文件变更的扫描），Tomcat 针对后台处理，在 Container 上定义了 backgroundProcess() 方法，其基础抽象类（ContainerBase）确保子啊启动组件的同时，异步启动后台处理，大多数情况，各个容器组件仅需要实现 Container 的 backgound-Process() 方法即可，不必考虑创建异步线程。</p>
+<h2 id="lifecycle">Lifecycle</h2>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://liguangchang.cn/tags/java/">java</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        1243 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2022-01-24 23:00
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+    <div class="pagination">
+        
+        <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+        </div>
+        
+
+        <div class="pagination__buttons">
+            
+            <span class="button previous">
+                <a href="https://liguangchang.cn/posts/es/es-basic/">
+                    <span class="button__icon">←</span>
+                    <span class="button__text">Elasticsearch: 基本概念</span>
+                </a>
+            </span>
+            
+
+            
+            <span class="button next">
+                <a href="https://liguangchang.cn/posts/java/refresh/">
+                    <span class="button__text">Refresh File</span>
+                    <span class="button__icon">→</span>
+                </a>
+            </span>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            
+            
+            
+            
+            <span>Powered by Hugo · hello-friend-ng</span>
+        </div>
+    </div>
+    
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span> &#183; <a href="https://beian.miit.gov.cn">京ICP备2020035531号-2</a> &#183; <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41012202000328" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"></span>
+        </div>
+    </div>
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2d3d449fc0ff117f00ac91342a8f76cd5b710411d7a0254dbe75da3234d2f685d6a0c44cff60c414e90b6a149da8e4032c713c25e4e6838e2e3918dc0ad2e81c.js" integrity="sha512-LT1En8D/EX8ArJE0Ko92zVtxBBHXoCVNvnXaMjTS9oXWoMRM/2DEFOkLahSdqOQDLHE8JeTmg44uORjcCtLoHA=="></script>
+
+
+
+    </body>
+</html>

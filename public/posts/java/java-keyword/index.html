@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="lgc523 ">
+<meta name="description" content="final 关键字可以用在 类、方法、参数上面，来告知编译器一块数据是恒等不变的。 final 让基本数据类型数值恒定不变，引用对象(包括数组)引用恒定不变。 被 static final" />
+<meta name="keywords" content=", java" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://liguangchang.cn/posts/java/java-keyword/" />
+
+
+    <title>
+        
+            Java-KeyWord :: 互联网没一个好东西 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.4e5c639214707eff609bb55fe49e183dee42258a73bc90e4cc7b0a84f900798a.css">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Java-KeyWord">
+<meta itemprop="description" content="final 关键字可以用在 类、方法、参数上面，来告知编译器一块数据是恒等不变的。 final 让基本数据类型数值恒定不变，引用对象(包括数组)引用恒定不变。 被 static final"><meta itemprop="datePublished" content="2021-12-12T09:37:51+08:00" />
+<meta itemprop="dateModified" content="2021-12-12T09:37:51+08:00" />
+<meta itemprop="wordCount" content="484">
+<meta itemprop="keywords" content="java," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Java-KeyWord"/>
+<meta name="twitter:description" content="final 关键字可以用在 类、方法、参数上面，来告知编译器一块数据是恒等不变的。 final 让基本数据类型数值恒定不变，引用对象(包括数组)引用恒定不变。 被 static final"/>
+
+
+
+
+    <meta property="og:title" content="Java-KeyWord" />
+<meta property="og:description" content="final 关键字可以用在 类、方法、参数上面，来告知编译器一块数据是恒等不变的。 final 让基本数据类型数值恒定不变，引用对象(包括数组)引用恒定不变。 被 static final" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://liguangchang.cn/posts/java/java-keyword/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-12-12T09:37:51+08:00" />
+<meta property="article:modified_time" content="2021-12-12T09:37:51+08:00" /><meta property="og:site_name" content="互联网没一个好东西" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2021-12-12 09:37:51 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ 无需执妄为真 则自在无碍</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#1b1c1d;
+                   animation-duration:5s;">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">|</a></li><li><a href="/posts">post</a></li><li><a href="/about">about</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+                <span class="theme-toggle not-selectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+   <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+   3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+   13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+ </svg></span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        One minute
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://liguangchang.cn/posts/java/java-keyword/">Java-KeyWord</a>
+      </h1>
+
+      
+
+      
+        <hr />
+        <aside id="toc">
+          <div class="toc-title">Table of Contents</div>
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#blank-final">blank final</a></li>
+    <li><a href="#final-param">final param</a></li>
+    <li><a href="#final-method">final method</a></li>
+    <li><a href="#final-class">final class</a></li>
+    <li><a href="#oriented-future">Oriented future</a></li>
+    <li><a href="#static">static</a></li>
+  </ul>
+</nav>
+        </aside>
+        <hr />
+
+      
+
+      <div class="post-content">
+        <p>final 关键字可以用在 类、方法、参数上面，来告知编译器一块数据是恒等不变的。</p>
+<p>final 让基本数据类型数值恒定不变，引用对象(包括数组)引用恒定不变。</p>
+<p>被 static final 修饰的域只占据一段不能改变的存储空间，只有 final 修饰的域只在有效的生命周期内不变。</p>
+<h2 id="blank-final">blank final</h2>
+<p>编译器会保证 final 修饰的域在使用前必须被初始化，blank final 提供了更大的灵活性。</p>
+<p>如果只是 final 修饰符 ，所有的 【构造函数】 都要进行初始化，static final 需要直接初始化或者在静态代码块里面初始化。</p>
+<h2 id="final-param">final param</h2>
+<p>方法参数列表中将参数用 final  修饰，约束方法内的代码块不能更改参数引用/数值，只能读取，引用对象可以修改引用内的数据。</p>
+<h2 id="final-method">final method</h2>
+<ul>
+<li>锁定方法，防止任何继承类修改，约束方法行为</li>
+<li>早期编译器 inline 优化，消除方法调用寄存器、栈开销。</li>
+<li>private method 默认 final 修饰，无意义。</li>
+</ul>
+<h2 id="final-class">final class</h2>
+<p>Final 类 禁止继承，所有方法都隐式指定为 final。</p>
+<h2 id="oriented-future">Oriented future</h2>
+<p>不用 final 修饰类，方便后面进行拓展和改造，eg Vector、HashTable。</p>
+<h2 id="static">static</h2>
+<p>所有 static 对象和代码块都会在加载时按照程序中的顺序加载进行初始化。</p>
+<p>static 方法不能访问非 static 修饰的方法（静态对象的引用，可以传入静态方法中，但是一般这个时候对象的状态都是各自类型的零值，当然可以继续修改引用）。</p>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://liguangchang.cn/tags/java/">java</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        484 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2021-12-12 09:37
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+    <div class="pagination">
+        
+        <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+        </div>
+        
+
+        <div class="pagination__buttons">
+            
+            <span class="button previous">
+                <a href="https://liguangchang.cn/posts/java/class/">
+                    <span class="button__icon">←</span>
+                    <span class="button__text">Class</span>
+                </a>
+            </span>
+            
+
+            
+            <span class="button next">
+                <a href="https://liguangchang.cn/posts/es/es-install/">
+                    <span class="button__text">Elasticsearch 生态，安装</span>
+                    <span class="button__icon">→</span>
+                </a>
+            </span>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            
+            
+            
+            
+            <span>Powered by Hugo · hello-friend-ng</span>
+        </div>
+    </div>
+    
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span> &#183; <a href="https://beian.miit.gov.cn">京ICP备2020035531号-2</a> &#183; <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41012202000328" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"></span>
+        </div>
+    </div>
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2d3d449fc0ff117f00ac91342a8f76cd5b710411d7a0254dbe75da3234d2f685d6a0c44cff60c414e90b6a149da8e4032c713c25e4e6838e2e3918dc0ad2e81c.js" integrity="sha512-LT1En8D/EX8ArJE0Ko92zVtxBBHXoCVNvnXaMjTS9oXWoMRM/2DEFOkLahSdqOQDLHE8JeTmg44uORjcCtLoHA=="></script>
+
+
+
+    </body>
+</html>

@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="lgc523 ">
+<meta name="description" content="version 7.15.x 节点 GET /{indexName}/_search_shards &amp;#34;roles&amp;#34; : [ &amp;#34;data&amp;#34;, &amp;#34;data_cold&amp;#34;, &amp;#34;data_content&amp;#34;, &amp;#34;data_frozen&amp;#34;, &amp;#34;data_hot&amp;#34;, &amp;#34;data_warm&amp;#34;, &amp;#34;ingest&amp;#34;, &amp;#34;master&amp;#34;, &amp;#34;ml&amp;#34;, &amp;#34;remote_cluster_client&amp;#34;, &amp;#34;transform&amp;#34; ] 每个节点启动，默认是 master eligible 节点，可以设置 node.master:false 禁止 master-eligible 节点可以参加选主流程，成为 master 节点 第一个节点启动时候，" />
+<meta name="keywords" content=", es" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://liguangchang.cn/posts/es/es-basic/" />
+
+
+    <title>
+        
+            Elasticsearch: 基本概念 :: 互联网没一个好东西 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.4e5c639214707eff609bb55fe49e183dee42258a73bc90e4cc7b0a84f900798a.css">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Elasticsearch: 基本概念">
+<meta itemprop="description" content="version 7.15.x 节点 GET /{indexName}/_search_shards &#34;roles&#34; : [ &#34;data&#34;, &#34;data_cold&#34;, &#34;data_content&#34;, &#34;data_frozen&#34;, &#34;data_hot&#34;, &#34;data_warm&#34;, &#34;ingest&#34;, &#34;master&#34;, &#34;ml&#34;, &#34;remote_cluster_client&#34;, &#34;transform&#34; ] 每个节点启动，默认是 master eligible 节点，可以设置 node.master:false 禁止 master-eligible 节点可以参加选主流程，成为 master 节点 第一个节点启动时候，"><meta itemprop="datePublished" content="2022-01-30T20:43:01+08:00" />
+<meta itemprop="dateModified" content="2022-01-30T20:43:01+08:00" />
+<meta itemprop="wordCount" content="2213">
+<meta itemprop="keywords" content="es," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Elasticsearch: 基本概念"/>
+<meta name="twitter:description" content="version 7.15.x 节点 GET /{indexName}/_search_shards &#34;roles&#34; : [ &#34;data&#34;, &#34;data_cold&#34;, &#34;data_content&#34;, &#34;data_frozen&#34;, &#34;data_hot&#34;, &#34;data_warm&#34;, &#34;ingest&#34;, &#34;master&#34;, &#34;ml&#34;, &#34;remote_cluster_client&#34;, &#34;transform&#34; ] 每个节点启动，默认是 master eligible 节点，可以设置 node.master:false 禁止 master-eligible 节点可以参加选主流程，成为 master 节点 第一个节点启动时候，"/>
+
+
+
+
+    <meta property="og:title" content="Elasticsearch: 基本概念" />
+<meta property="og:description" content="version 7.15.x 节点 GET /{indexName}/_search_shards &#34;roles&#34; : [ &#34;data&#34;, &#34;data_cold&#34;, &#34;data_content&#34;, &#34;data_frozen&#34;, &#34;data_hot&#34;, &#34;data_warm&#34;, &#34;ingest&#34;, &#34;master&#34;, &#34;ml&#34;, &#34;remote_cluster_client&#34;, &#34;transform&#34; ] 每个节点启动，默认是 master eligible 节点，可以设置 node.master:false 禁止 master-eligible 节点可以参加选主流程，成为 master 节点 第一个节点启动时候，" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://liguangchang.cn/posts/es/es-basic/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-01-30T20:43:01+08:00" />
+<meta property="article:modified_time" content="2022-01-30T20:43:01+08:00" /><meta property="og:site_name" content="互联网没一个好东西" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2022-01-30 20:43:01 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ 无需执妄为真 则自在无碍</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#1b1c1d;
+                   animation-duration:5s;">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">|</a></li><li><a href="/posts">post</a></li><li><a href="/about">about</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+                <span class="theme-toggle not-selectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+   <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+   3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+   13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+ </svg></span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        5 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://liguangchang.cn/posts/es/es-basic/">Elasticsearch: 基本概念</a>
+      </h1>
+
+      
+
+      
+        <hr />
+        <aside id="toc">
+          <div class="toc-title">Table of Contents</div>
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#节点">节点</a></li>
+    <li><a href="#shard">shard</a>
+      <ul>
+        <li><a href="#primary-shard">Primary shard</a></li>
+        <li><a href="#replica-shard">Replica shard</a></li>
+      </ul>
+    </li>
+    <li><a href="#cluster-health">Cluster health</a></li>
+    <li><a href="#crud">CRUD</a>
+      <ul>
+        <li><a href="#create">Create</a></li>
+        <li><a href="#get">GET</a></li>
+        <li><a href="#update">Update</a></li>
+        <li><a href="#index">index</a></li>
+      </ul>
+    </li>
+    <li><a href="#bulk">Bulk</a></li>
+    <li><a href="#mget">mget</a></li>
+    <li><a href="#msearch">msearch</a></li>
+    <li><a href="#err-status_code">Err status_code</a></li>
+    <li><a href="#info">info</a></li>
+    <li><a href="#analyzer">analyzer</a>
+      <ul>
+        <li><a href="#组成">组成</a></li>
+        <li><a href="#内置分词器">内置分词器</a></li>
+        <li><a href="#_analyzer-api">_analyzer API</a></li>
+        <li><a href="#standard-analyzer">standard analyzer</a></li>
+        <li><a href="#simple-analyzer">simple analyzer</a></li>
+        <li><a href="#whitespace">whitespace</a></li>
+        <li><a href="#stop-analyzer">stop analyzer</a></li>
+        <li><a href="#keyword-analyzer">Keyword analyzer</a></li>
+        <li><a href="#pattern-analyzer">Pattern analyzer</a></li>
+        <li><a href="#icu-analyzer">ICU Analyzer</a></li>
+      </ul>
+    </li>
+    <li><a href="#倒排索引">倒排索引</a></li>
+    <li><a href="#search-api">Search api</a></li>
+    <li><a href="#relevance">Relevance</a></li>
+    <li><a href="#uri-search">URI Search</a>
+      <ul>
+        <li><a href="#query-string-syntax">query string syntax</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </aside>
+        <hr />
+
+      
+
+      <div class="post-content">
+        <ul>
+<li>version 7.15.x</li>
+</ul>
+<h2 id="节点">节点</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>GET /<span style="color:#f92672">{</span>indexName<span style="color:#f92672">}</span>/_search_shards  
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;roles&#34;</span> : <span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;data&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;data_cold&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;data_content&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;data_frozen&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;data_hot&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;data_warm&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;ingest&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;master&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;ml&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;remote_cluster_client&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;transform&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">]</span>
+</span></span></code></pre></div><ul>
+<li>每个节点启动，默认是 master eligible 节点，可以设置 node.master:false 禁止</li>
+<li>master-eligible 节点可以参加选主流程，成为 master 节点</li>
+<li>第一个节点启动时候，会将自己选举成 master 节点</li>
+<li>每个节点都保存了集群的状态，只有 master 节点才能修改集群的状态信息
+<ul>
+<li>node.master: true</li>
+<li>集群状态 cluster state 维护了一个集群中的必要信息
+<ul>
+<li>所有的节点信息</li>
+<li>所有的索引和其相关的 mapping 与 setting 信息</li>
+<li>分片的路由信息</li>
+</ul>
+</li>
+<li>任意节点都能修改信息将会导致数据不一致</li>
+<li>？集中式中心架构？</li>
+</ul>
+</li>
+<li>Data node
+<ul>
+<li>node.data: true</li>
+<li>保存数据的节点，负责保存分片数据</li>
+</ul>
+</li>
+<li>Coordinating node 协调节点
+<ul>
+<li>请求会跨越多个节点的时候（bulk_indexing，search）</li>
+<li>Coordinating 节点负责接收 client 的请求，将请求分发到合适的节点，最终把结果汇集到一起，<strong>scatter-gather</strong>
+<ul>
+<li><strong>scatter阶段</strong>， 转发请求给含有相关数据的节点</li>
+<li>Data 节点在本地执行请求后把结果返回给 coordinating 节点</li>
+<li><strong>gather 阶段</strong>，Coordinating 节点汇总结果成一个单一的全局结果集</li>
+</ul>
+</li>
+<li><strong>每个节点默认都起到了 Corrdinating node 的职责</strong></li>
+</ul>
+</li>
+<li>Hot &amp; Warm node
+<ul>
+<li>不同硬件配置的 data node 实现冷热数据，降低成本</li>
+</ul>
+</li>
+<li>Machine Learning Node
+<ul>
+<li>负责跑机器学习的 Job，用来做异常检测</li>
+</ul>
+</li>
+<li>ingest node 提取节点
+<ul>
+<li>node.ingest: true</li>
+<li>可以通过 ingest pipeline 对文档执行预处理操作，以便在索引文档之前对文档进行转换或者增强</li>
+</ul>
+</li>
+<li>Client node
+<ul>
+<li>客户端节点
+<ul>
+<li>node.master : false</li>
+<li>node.data: false</li>
+</ul>
+</li>
+<li>节点只能处理路由请求，处理搜索，分发索引操作等，表现为智能负载平衡器</li>
+<li>主节点必须等待每一个节点集群状态的更新确认，客户端节点太多会成为负担。</li>
+</ul>
+</li>
+</ul>
+<h2 id="shard">shard</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>GET /_cat/shards?v
+</span></span></code></pre></div><h3 id="primary-shard">Primary shard</h3>
+<p>主分片，解决数据水平拓展的问题，通过主分片，可以将数据分布到集群内的所有节点之上</p>
+<ul>
+<li>一个分片是一个运行的 Lucene 的实例</li>
+<li>主分片数载索引创建时指定，后续不允许修改，除非 reindex</li>
+</ul>
+<p>需要提前做好容量规划</p>
+<ul>
+<li>分片设置过小
+<ul>
+<li>后续无法增加节点实现水平拓展</li>
+<li>单个分片的数据量太大，导致数据重新分配耗时</li>
+</ul>
+</li>
+<li>分片设置过大，7.0 开始，默认主分片设置为1，解决了 over-sharding 的问题
+<ul>
+<li>影响搜索结果的相关性打分，影响统计结果的准确性</li>
+<li>单个节点上过多的分片，会导致资源浪费，同时影响性能</li>
+</ul>
+</li>
+</ul>
+<h3 id="replica-shard">Replica shard</h3>
+<p>副本，解决数据高可用问题，分片是主分片的拷贝</p>
+<ul>
+<li>副本分片数，可以动态调整</li>
+<li>增加福本数可以在一定程度上提高读取的吞吐</li>
+</ul>
+<h2 id="cluster-health">Cluster health</h2>
+<p><code>GET /_cluster/health</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;cluster_name&#34;</span> : <span style="color:#e6db74">&#34;spider-es-cluster&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;status&#34;</span> : <span style="color:#e6db74">&#34;green&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;timed_out&#34;</span> : false,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;number_of_nodes&#34;</span> : 3,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;number_of_data_nodes&#34;</span> : 3,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;active_primary_shards&#34;</span> : 26,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;active_shards&#34;</span> : 52,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;relocating_shards&#34;</span> : 0,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;initializing_shards&#34;</span> : 0,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;unassigned_shards&#34;</span> : 0,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;delayed_unassigned_shards&#34;</span> : 0,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;number_of_pending_tasks&#34;</span> : 0,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;number_of_in_flight_fetch&#34;</span> : 0,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;task_max_waiting_in_queue_millis&#34;</span> : 0,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;active_shards_percent_as_number&#34;</span> : 100.0
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><ul>
+<li>Green 主分片和副本都正常分配</li>
+<li>Yellow 主分片全部正常分配，有副本分片未能正常分配</li>
+<li>Red 有主分片未能分配
+<ul>
+<li>磁盘不够时</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>GET /_cat/nodes
+</span></span><span style="display:flex;"><span>GET /_cat/shards
+</span></span></code></pre></div><h2 id="crud">CRUD</h2>
+<ul>
+<li>index
+<ul>
+<li><strong>Id 不存在创建新的 doc，否则删除现有的文档，新的文档被索引，版本信息 +1</strong></li>
+</ul>
+</li>
+<li>create
+<ul>
+<li>id 存在会失败</li>
+</ul>
+</li>
+<li>read</li>
+<li>update
+<ul>
+<li>文档必须存在，更新只会对相应字段做增量修改</li>
+</ul>
+</li>
+<li>Delete</li>
+</ul>
+<h3 id="create">Create</h3>
+<p><code>PUT index_name/_create/{id}</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>指定 文档id
+</span></span></code></pre></div><p><code>POST /index_name/_doc/</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>自动生成id
+</span></span></code></pre></div><h3 id="get">GET</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>GET /users/_doc/2
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;_index&#34;</span> : <span style="color:#e6db74">&#34;users&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;_type&#34;</span> : <span style="color:#e6db74">&#34;_doc&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;_id&#34;</span> : <span style="color:#e6db74">&#34;2&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;_version&#34;</span> : 1,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;_seq_no&#34;</span> : 1,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;_primary_term&#34;</span> : 1,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;found&#34;</span> : true,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;_source&#34;</span> : <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;firstName&#34;</span> : <span style="color:#e6db74">&#34;Jack&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;lastName&#34;</span> : <span style="color:#e6db74">&#34;Johnson&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;tags&#34;</span> : <span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;guitar&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;stateboard&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>同一个 ID 的文档，即使被删除，version 号也会不断增加。</p>
+<h3 id="update">Update</h3>
+<ul>
+<li>不会删除原来的文档，实现真正的数据更新</li>
+<li>Post 方法，Payload 需要包含在 doc 中</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>POST /users/_update/2
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;doc&#34;</span>:<span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;firstName&#34;</span>:<span style="color:#e6db74">&#34;spider&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h3 id="index">index</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>PUT users/_doc/<span style="color:#f92672">{</span>id<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>先删除，再更新版本号
+</span></span></code></pre></div><h2 id="bulk">Bulk</h2>
+<p>支持在一次 API 调用中，对不同的索引进行操作。</p>
+<p>支持四种类型操作</p>
+<ul>
+<li>index</li>
+<li>create</li>
+<li>update</li>
+<li>delete</li>
+</ul>
+<p>单个操作失败不会影响其他操作，返回每个操作执行的结果。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>POST <span style="color:#f92672">[</span>/<span style="color:#f92672">{</span>index_name<span style="color:#f92672">}</span>/<span style="color:#f92672">]</span>_bulk
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span> <span style="color:#e6db74">&#34;index&#34;</span> : <span style="color:#f92672">{</span> <span style="color:#e6db74">&#34;_index&#34;</span> : <span style="color:#e6db74">&#34;test&#34;</span>, <span style="color:#e6db74">&#34;_id&#34;</span> : <span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#f92672">}</span> <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span> <span style="color:#e6db74">&#34;field1&#34;</span> : <span style="color:#e6db74">&#34;value1&#34;</span> <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;delete&#34;</span>:<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;_index&#34;</span>:<span style="color:#e6db74">&#34;testa&#34;</span>,<span style="color:#e6db74">&#34;_id&#34;</span>:<span style="color:#e6db74">&#34;1&#34;</span><span style="color:#f92672">}}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;delete&#34;</span>:<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;_index&#34;</span>:<span style="color:#e6db74">&#34;test&#34;</span>,<span style="color:#e6db74">&#34;_id&#34;</span>:<span style="color:#e6db74">&#34;2&#34;</span><span style="color:#f92672">}}</span>
+</span></span></code></pre></div><h2 id="mget">mget</h2>
+<p>根据 doc id查询</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>GET <span style="color:#f92672">[{</span>index_name<span style="color:#f92672">}]</span>/_mget
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;docs&#34;</span>:<span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;_index&#34;</span>:<span style="color:#e6db74">&#34;test&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;_id&#34;</span>:1
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;_index&#34;</span>:<span style="color:#e6db74">&#34;movies&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;_id&#34;</span>:1
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>     <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;_index&#34;</span>:<span style="color:#e6db74">&#34;movies&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;_id&#34;</span>:29876
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h2 id="msearch">msearch</h2>
+<p>根据查询条件查询</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>POST kibana_sample_data_ecommerce/_msearch
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;query&#34;</span>:<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;match_all&#34;</span>:<span style="color:#f92672">{}}</span>,<span style="color:#e6db74">&#34;size&#34;</span>:1<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;index&#34;</span>:<span style="color:#e6db74">&#34;kibana_sample_data_ecommerce&#34;</span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;query&#34;</span>:<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;match_all&#34;</span>:<span style="color:#f92672">{}}</span>,<span style="color:#e6db74">&#34;size&#34;</span>:1<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;index&#34;</span>:<span style="color:#e6db74">&#34;test&#34;</span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;query&#34;</span>:<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;match_all&#34;</span>:<span style="color:#f92672">{}}</span>,<span style="color:#e6db74">&#34;size&#34;</span>:2<span style="color:#f92672">}</span>
+</span></span></code></pre></div><h2 id="err-status_code">Err status_code</h2>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>无法连接</td>
+<td>网络故障/集群down</td>
+</tr>
+<tr>
+<td>连接无法关闭</td>
+<td>网络故障活节点出错</td>
+</tr>
+<tr>
+<td>429</td>
+<td>集群过于繁忙</td>
+</tr>
+<tr>
+<td>4xx</td>
+<td>请求体格式有错</td>
+</tr>
+<tr>
+<td>500</td>
+<td>集群内部错误</td>
+</tr>
+</tbody>
+</table>
+<h2 id="info">info</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#查看索引相关的信息</span>
+</span></span><span style="display:flex;"><span>GET kibana_sample_data_ecommerce
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#查看索引的文档个数</span>
+</span></span><span style="display:flex;"><span>GET kibana_sample_data_ecommerce/_count
+</span></span><span style="display:flex;"><span>GET test
+</span></span><span style="display:flex;"><span>POST kibana_sample_data_ecommerce/_search
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>GET /_cat/indices/kibana*?v&amp;s<span style="color:#f92672">=</span>index
+</span></span><span style="display:flex;"><span>GET /_cat/indices?v&amp;health<span style="color:#f92672">=</span>green
+</span></span><span style="display:flex;"><span>GET /_cat/indices?v&amp;s<span style="color:#f92672">=</span>docs.count:desc
+</span></span><span style="display:flex;"><span>GET /_cat/indices/kibana*?pri&amp;v&amp;h<span style="color:#f92672">=</span>health,index,pri,rep,docs.count,mt
+</span></span><span style="display:flex;"><span>GET /_cat/indices?v&amp;h<span style="color:#f92672">=</span>i,tm&amp;s<span style="color:#f92672">=</span>tm:desc
+</span></span><span style="display:flex;"><span>GET /_cat/nodes?v
+</span></span><span style="display:flex;"><span>GET /_cat/nodes?v&amp;h<span style="color:#f92672">=</span>id,ip,port,v,m
+</span></span><span style="display:flex;"><span>GET /_cat/shards
+</span></span><span style="display:flex;"><span>GET /_cat/indices
+</span></span><span style="display:flex;"><span>GET /_cluster/health?level<span style="color:#f92672">=</span>shards
+</span></span></code></pre></div><h2 id="analyzer">analyzer</h2>
+<p>Analysis 文本分析是把全文本转换一系列单词 term/token 的过程。</p>
+<p>Analysis 通过 analyzer 来实现的，可以使用内置的分析器或者按需定制化分析器。</p>
+<p>数据写入和匹配 Query 语句时需要用相同的分析器对查询语句进行分析。</p>
+<h3 id="组成">组成</h3>
+<ul>
+<li><strong>character filters</strong>
+<ul>
+<li>针对原始文本处理，eg 去除 html 标签</li>
+</ul>
+</li>
+<li><strong>tokenizer</strong>
+<ul>
+<li>按照规则切分单词</li>
+</ul>
+</li>
+<li><strong>token filter</strong>
+<ul>
+<li>将切分的单词进行加工，大小写转换，删除 stop words</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://s2.loli.net/2022/04/04/2uH6VjT5tqAlSEL.png" alt="analyzer"></p>
+<h3 id="内置分词器">内置分词器</h3>
+<ul>
+<li>Standard Analyzer 默认粉刺起，按词切分，小些处理</li>
+<li>Simple Analyzer     按照非字母切分，符号被过滤，小写处理</li>
+<li>Stop Analyzer 小写处理，停用词过滤（the ,a , is）</li>
+<li>Whitespace Analyzer 按照空格切分，不转小写</li>
+<li>Keyword Analyzer 不分词，直接将输入当作输出</li>
+<li>Patter Analyzer 正则表达式，默认 \W+ （非字符分隔）</li>
+<li>Language 提供了30多种常见语言的分词器</li>
+<li>Customer Analyzer 自定义分词器</li>
+</ul>
+<h3 id="_analyzer-api">_analyzer API</h3>
+<ul>
+<li>
+<p>直接指定 Analyzer 进行测试</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>GET /_analyze
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;analyzer&#34;</span>: <span style="color:#e6db74">&#34;standard&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;text&#34;</span>:<span style="color:#e6db74">&#34;Master Elasticsearch,elasticsearch in Action&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div></li>
+<li>
+<p>指定索引的字段进行测试</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>POST movies/_analyze
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;field&#34;</span>: <span style="color:#e6db74">&#34;title&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;text&#34;</span>: <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;Mastering Elasticsearch&#34;</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div></li>
+<li>
+<p>自定义分词器进行测试</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>POST /_analyze
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;tokenizer&#34;</span>: <span style="color:#e6db74">&#34;standard&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;filter&#34;</span>: <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;lowercase&#34;</span><span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;text&#34;</span>:<span style="color:#e6db74">&#34;Mastering Elasticsearch&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div></li>
+</ul>
+<h3 id="standard-analyzer">standard analyzer</h3>
+<ul>
+<li>默认分词器</li>
+<li>按词切分</li>
+<li>小写处理</li>
+</ul>
+<p><img src="https://s2.loli.net/2022/04/04/QYpcJXr7fmjvL5G.png" alt="standard_analyzer"></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>GET /_analyze
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;analyzer&#34;</span>: <span style="color:#e6db74">&#34;standard&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;text&#34;</span>: <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;2 running Quick brown-foxes leap over lazy dogs in the summer evening&#34;</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>只会对词进行切分，不过过滤停用词 in the
+</span></span></code></pre></div><h3 id="simple-analyzer">simple analyzer</h3>
+<ul>
+<li>非字母切分，非字母的都被去除</li>
+<li>小写处理</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>GET /_analyze
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;analyzer&#34;</span>: <span style="color:#e6db74">&#34;simple&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;text&#34;</span>: <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;2 running Quick brown-foxes leap over lazy dogs in the summer evening&#34;</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>brown
+</span></span><span style="display:flex;"><span>foxes
+</span></span></code></pre></div><h3 id="whitespace">whitespace</h3>
+<ul>
+<li>按照空格切分</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>GET /_analyze
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;analyzer&#34;</span>: <span style="color:#e6db74">&#34;whitespace&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;text&#34;</span>: <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;2 running Quick brown-foxes leap over lazy dogs in the summer evening&#34;</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">12</span> 个 token
+</span></span></code></pre></div><h3 id="stop-analyzer">stop analyzer</h3>
+<ul>
+<li>非字母切分，非字母的都被去除</li>
+<li>小写处理</li>
+<li>Stop  filter
+<ul>
+<li>去除 the a is 等修饰性词语</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>GET /_analyze
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;analyzer&#34;</span>: <span style="color:#e6db74">&#34;stop&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;text&#34;</span>: <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;2 running Quick brown-foxes leap over lazy dogs in the summer evening&#34;</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2</span> 也没有了，
+</span></span></code></pre></div><h3 id="keyword-analyzer">Keyword analyzer</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>GET /_analyze
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;analyzer&#34;</span>: <span style="color:#e6db74">&#34;keyword&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;text&#34;</span>: <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;2 running Quick brown-foxes leap over lazy dogs in the summer evening&#34;</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>不分词
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;tokens&#34;</span> : <span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;token&#34;</span> : <span style="color:#e6db74">&#34;2 running Quick brown-foxes leap over lazy dogs in the summer evening&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;start_offset&#34;</span> : 0,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;end_offset&#34;</span> : 69,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;type&#34;</span> : <span style="color:#e6db74">&#34;word&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;position&#34;</span> : <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h3 id="pattern-analyzer">Pattern analyzer</h3>
+<h3 id="icu-analyzer">ICU Analyzer</h3>
+<ul>
+<li>Elastic search-plugin install analysis-icu</li>
+<li>提供了 unicode 支持，更好的支持亚洲语言</li>
+</ul>
+<h2 id="倒排索引">倒排索引</h2>
+<h2 id="search-api">Search api</h2>
+<ul>
+<li>
+<p>URL Search</p>
+<ul>
+<li>GET 方法，在 url 中使用查询参数</li>
+<li>使用 &lsquo;q&rsquo; 指定查询字符串</li>
+<li>&ldquo;query string syntax&rdquo; KV 键值对</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cu http://localhost:9200/kibana_sample_data_ecommerce/_search?q<span style="color:#f92672">=</span>customer_first_name:Eddie | json
+</span></span></code></pre></div><table>
+<thead>
+<tr>
+<th>语法</th>
+<th>范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/_search</td>
+<td>集群上所有索引</td>
+</tr>
+<tr>
+<td>/index1/_search</td>
+<td>index1</td>
+</tr>
+<tr>
+<td>/index1.index2/_search</td>
+<td>index1.index2，一条语句再多个index上执行</td>
+</tr>
+<tr>
+<td>/index*/_search</td>
+<td>Index 开头的索引</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Request Body Search</p>
+<ul>
+<li>基于 JSON 格式的 Query Domain Specific Language</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cu -XGET/POST http://localhost:9200/kibana_sample_data_ecommerce/_search -H <span style="color:#e6db74">&#34;Content-type:application/json&#34;</span> -d <span style="color:#e6db74">&#39;{&#34;query&#34;:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">				&#34;match_all&#34;:{}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">		 }&#39;</span> | json
+</span></span></code></pre></div></li>
+</ul>
+<h2 id="relevance">Relevance</h2>
+<p>Information retrieval 衡量相关性</p>
+<ul>
+<li>precision 查准率，尽可能返回较少的无关文档</li>
+<li>recall 查全率，尽量返回较多的相关文档</li>
+<li>ranking 是否能够按照相关度进行排序</li>
+</ul>
+<h2 id="uri-search">URI Search</h2>
+<ul>
+<li>q 指定查询语句，query string syntax</li>
+<li>df 默认字段，不指定时会对所有字段进行查询</li>
+<li>sort 排序,from, size 用于分页</li>
+<li>profile 可以查看查询时如何被执行的</li>
+</ul>
+<h3 id="query-string-syntax">query string syntax</h3>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://liguangchang.cn/tags/es/">es</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        2213 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2022-01-30 20:43
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+    <div class="pagination">
+        
+        <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+        </div>
+        
+
+        <div class="pagination__buttons">
+            
+            <span class="button previous">
+                <a href="https://liguangchang.cn/posts/go/go-design-philosophy/">
+                    <span class="button__icon">←</span>
+                    <span class="button__text">Go Design Philosophy</span>
+                </a>
+            </span>
+            
+
+            
+            <span class="button next">
+                <a href="https://liguangchang.cn/posts/java/tomcat-architecture/">
+                    <span class="button__text">Tomcat Architechure</span>
+                    <span class="button__icon">→</span>
+                </a>
+            </span>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            
+            
+            
+            
+            <span>Powered by Hugo · hello-friend-ng</span>
+        </div>
+    </div>
+    
+    
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span> &#183; <a href="https://beian.miit.gov.cn">京ICP备2020035531号-2</a> &#183; <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41012202000328" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"></span>
+        </div>
+    </div>
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2d3d449fc0ff117f00ac91342a8f76cd5b710411d7a0254dbe75da3234d2f685d6a0c44cff60c414e90b6a149da8e4032c713c25e4e6838e2e3918dc0ad2e81c.js" integrity="sha512-LT1En8D/EX8ArJE0Ko92zVtxBBHXoCVNvnXaMjTS9oXWoMRM/2DEFOkLahSdqOQDLHE8JeTmg44uORjcCtLoHA=="></script>
+
+
+
+    </body>
+</html>
