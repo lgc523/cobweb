@@ -14,6 +14,10 @@ disable404 = false
 [blackfriday]
   hrefTargetBlank = true
 
+[params.utterances]
+    owner = "lgc523"
+    repo = "hugo-comment"
+
 [params]
 	showReadingTime = true
 
@@ -36,6 +40,8 @@ disable404 = false
 	[[params.social]]
 		name = "email"
 		url  = "mailto:lgc523@126.com"
+
+
 
 [params.footer]
 	topText = ["Powered by Hugo · hello-friend-ng"]
