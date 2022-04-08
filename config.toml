@@ -57,7 +57,7 @@ disable404 = false
 	
 [languages]
 	[languages.en]
-		title = "互联网没一个好东西"
+		title = "🫥🌦🏝♨︎😶‍🌫️"
 		readOtherPosts = "Read other posts"
 		newerPosts = "Newer"
 		olderPosts = "Older"
@@ -67,7 +67,7 @@ disable404 = false
 		dataFormatList = "2006-01-02"
 
 		[languages.en.params.logo]
-			logoText = "$ 无需执妄为真 则自在无碍"
+			logoText = "$ Keep simple,keep Stupid"
 			logoHomeLink = "/"
 			logoCursorColor = "#1b1c1d"
 			logoCursorANimate = "5s"
