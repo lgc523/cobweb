@@ -67,7 +67,7 @@ disable404 = false
 		dataFormatList = "2006-01-02"
 
 		[languages.en.params.logo]
-			logoText = "$ Keep simple,keep Stupid"
+			logoText = "$ Keep Simple,Keep Stupid,Keep Graceful"
 			logoHomeLink = "/"
 			logoCursorColor = "#1b1c1d"
 			logoCursorANimate = "5s"
